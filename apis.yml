@@ -1,7 +1,26 @@
 aid: sitejabber
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/sitejabber.png
 name: SiteJabber
-description: SiteJabber is a company surfaced as a portfolio company of 500-global and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: SiteJabber is a consumer review platform (rebranded as SmartCustomer at smartcustomer.com)
+  where shoppers read and write reviews about online businesses and services across categories like
+  clothing, electronics, and dating. Operating for over twenty years, it emphasizes consumer protection
+  through review moderation and verification, and offers a browser extension that surfaces business
+  ratings while users browse. On the business side it is an official Google Review Partner that
+  distributes verified reviews to Google Seller Ratings, Google Business profiles, and Google Shopping
+  Ads, and provides review-collection widgets and e-commerce integrations. It was surfaced as a
+  portfolio company of 500 Global and added to the API Evangelist network. As of this enrichment pass
+  no public developer API or API reference was found on the provider's surface.
 url: https://raw.githubusercontent.com/api-evangelist/sitejabber/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -9,11 +28,25 @@ x-backed-by:
 - 500-global
 x-tier: stub
 x-tier-reason: portfolio-lead
+x-rebrand:
+  from: SiteJabber (sitejabber.com)
+  to: SmartCustomer (smartcustomer.com)
+x-enrichment:
+  date: '2026-07-21'
+  status: minimal
+  artifacts_added: 1
+  pass: local-v1
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
+- Reviews
+- Consumer Reviews
+- Reputation Management
+- E-commerce
+- Trust and Safety
+- Google Seller Ratings
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -21,5 +54,17 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/sitejabber-domain-security.yml
 - type: Website
-  url: https://sitejabber.com
+  url: https://www.smartcustomer.com
+- type: Login
+  url: https://www.smartcustomer.com/login
+- type: Pricing
+  url: https://www.smartcustomer.com/business/pricing
+- type: TermsOfService
+  url: https://www.smartcustomer.com/terms
+- type: PrivacyPolicy
+  url: https://www.smartcustomer.com/privacy
+- type: Support
+  url: https://www.smartcustomer.com/contact-us
