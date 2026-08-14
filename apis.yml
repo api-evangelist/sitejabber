@@ -1,53 +1,112 @@
 aid: sitejabber
 accessModel:
-  pricing: unknown
-  onboarding: unknown
+  pricing: contact-sales
+  onboarding: request
   trial: false
   try_now: false
   public: false
-  label: Unknown
-  confidence: low
-  source: []
-  generated: '2026-07-22'
-  method: derived
+  label: Gated
+  confidence: high
+  source:
+  - https://www.smartcustomer.com/business/pricing
+  - https://api.sitejabber.com/
+  note: >-
+    The API REFERENCE is fully public and requires no login. Access to the API is not: a client_token
+    is issued to a business from its account (biz.smartcustomer.com/account) and there is no
+    self-serve developer signup, no sandbox and no trial key. All four packages are contact-sales
+    with no published price, and API is a feature row on the plan matrix.
+  generated: '2026-08-13'
+  method: searched
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/sitejabber.png
 name: SiteJabber
-description: SiteJabber is a consumer review platform (rebranded as SmartCustomer at smartcustomer.com)
-  where shoppers read and write reviews about online businesses and services across categories like
-  clothing, electronics, and dating. Operating for over twenty years, it emphasizes consumer protection
-  through review moderation and verification, and offers a browser extension that surfaces business
-  ratings while users browse. On the business side it is an official Google Review Partner that
-  distributes verified reviews to Google Seller Ratings, Google Business profiles, and Google Shopping
-  Ads, and provides review-collection widgets and e-commerce integrations. It was surfaced as a
-  portfolio company of 500 Global and added to the API Evangelist network. As of this enrichment pass
-  no public developer API or API reference was found on the provider's surface.
+description: >-
+  SiteJabber is a consumer review platform, rebranded as SmartCustomer at smartcustomer.com, where
+  shoppers read and write reviews about online businesses, services and products. Operating for over
+  twenty years, it emphasizes consumer protection through review moderation and verification, and
+  offers a browser extension that surfaces business ratings while users browse. On the business side
+  it is an official Google Review Partner that distributes verified reviews to Google Seller Ratings,
+  Google Business profiles and Google Shopping Ads, and it sells review sourcing, moderation,
+  showcasing widgets, competitive intelligence and e-commerce integrations across four contact-sales
+  packages. It was surfaced as a portfolio company of 500 Global and added to the API Evangelist
+  network. It does publish a developer API: the SmartCustomer Business API, a 31-operation REST
+  surface documented at api.sitejabber.com covering business ratings, consumer reviews and
+  moderation, reviewer messaging, review requests by email and SMS, a full product-review and
+  catalog surface, and two CCPA-shaped customer-privacy operations. A prior enrichment pass recorded
+  no API; that was wrong — the reference is served from the pre-rebrand api.sitejabber.com host,
+  which is not linked from the current consumer or business site navigation.
 url: https://raw.githubusercontent.com/api-evangelist/sitejabber/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - 500-global
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: published-api-reference
 x-rebrand:
   from: SiteJabber (sitejabber.com)
   to: SmartCustomer (smartcustomer.com)
 x-enrichment:
-  date: '2026-07-21'
-  status: minimal
-  artifacts_added: 1
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 20
   pass: local-v1
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-21'
+modified: '2026-08-13'
 tags:
 - Company
 - Reviews
 - Consumer Reviews
+- Product Reviews
 - Reputation Management
+- Reviews Management
 - E-commerce
 - Trust and Safety
 - Google Seller Ratings
-apis: []
+- Customer Feedback
+- Ratings
+- Privacy
+apis:
+- name: SmartCustomer (Sitejabber) Business API
+  description: >-
+    The SmartCustomer Business API (published under the pre-rebrand Sitejabber name at
+    api.sitejabber.com) is the review-management API behind SmartCustomer's business product. It
+    covers business profile and ratings lookup (single and bulk), business Q&A, consumer reviews
+    (read, search by keyword/label/date, publish an unpublished review, flag a review), review
+    comments, resolution attempts and direct messaging with reviewers, review requests by email or
+    SMS, partner write/edit review links, a full product-reviews surface (catalog CRUD, product Q&A,
+    product reviews with photos, votes, top-rated, aggregate stats, product review requests), and two
+    CCPA-shaped privacy operations that let a business access or remove a customer's information.
+    Authentication is two-part: a client_token API key on every request plus a user_token session
+    header obtained from POST /login.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Reviews
+  - Consumer Reviews
+  - Reputation Management
+  - Product Reviews
+  - Reviews Management
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-business-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+  - type: Overlay
+    url: overlays/sitejabber-business-api-overlay.yaml
+  - type: MCPServer
+    url: mcp/sitejabber-mcp.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -68,3 +127,29 @@ common:
   url: https://www.smartcustomer.com/privacy
 - type: Support
   url: https://www.smartcustomer.com/contact-us
+- type: DeveloperPortal
+  url: https://api.sitejabber.com/
+- type: Documentation
+  url: https://api.sitejabber.com/
+- type: GitHubOrganization
+  url: https://github.com/smartcustomer-reviews
+- type: SignUp
+  url: https://www.smartcustomer.com/registration
+- type: HelpCenter
+  url: https://www.smartcustomer.com/faq
+- type: Packages
+  url: packages/sitejabber-packages.yml
+- type: SDKs
+  url: packages/sitejabber-packages.yml
+- type: LLMsTxt
+  url: llms/sitejabber-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Conformance
+  url: conformance/sitejabber-conformance.yml
+- type: Lifecycle
+  url: lifecycle/sitejabber-lifecycle.yml
+- type: Plans
+  url: plans/sitejabber-plans-pricing.yml
+- type: Components
+  url: components/sitejabber-components.yml
