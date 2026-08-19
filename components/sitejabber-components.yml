@@ -1,0 +1,82 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.smartcustomer.com/business/widgets and https://www.smartcustomer.com/business/integrations
+note: >-
+  SmartCustomer ships an embeddable widget library — the client-side surface businesses install on
+  their own storefront to display and collect reviews. It is distinct from the REST API and distinct
+  from the payload-encryption packages in packages/. The widget catalog is described qualitatively on
+  the marketing site; no loader script URL, embed snippet, attribute reference or per-widget
+  documentation is published publicly (install instructions live behind the business account), so the
+  families below are recorded WITHOUT invented embed code.
+families:
+- family: trust seals
+  purpose: SmartCustomer trust badges placed across website, ads, emails and marketing assets.
+  surface: embed
+  customization:
+  - star designs
+  - colors
+  documented_publicly: false
+- family: review showcasing widgets
+  purpose: Display selected reviews and star ratings on storefront pages.
+  surface: embed
+  customization:
+  - horizontal or vertical layout
+  - colors and star designs
+  - tag filters
+  - rating filters
+  sizes: from a small badge to a full page of reviews
+  responsive: true
+  documented_publicly: false
+  note: Listed on the pricing matrix as "Showcasing Widgets" and "Showcasing Widget Customization".
+- family: review collection widgets
+  purpose: Invite customer feedback in-page.
+  surface: embed
+  documented_publicly: false
+  note: Listed on the pricing matrix as "Collection Widgets" and "Collection Widget Customization".
+- family: online checkout survey
+  purpose: Post-purchase review capture in the checkout flow.
+  surface: embed
+  documented_publicly: false
+  note: Corresponds to the CHECKOUT_WIDGET value of Review.source in the API.
+- family: product page showcasing widgets
+  purpose: Product-level reviews, Q&A and photos on product detail pages.
+  surface: embed
+  documented_publicly: false
+  note: Part of the Product Reviews add-on.
+loaders:
+  published: false
+  note: >-
+    No public loader library, npm package or CDN URL was found. Widget install snippets are issued
+    from the business account, so there is no version to pin or record.
+install:
+  method: copy-paste snippet
+  quote: "\"Simply copy & paste a few snippets of code, and you're good to go.\""
+  self_serve_docs: false
+api_relationship:
+  quote: "\"Need something custom-built from scratch? Easily fetch necessary data with the REST API and design to your heart's content.\""
+  note: >-
+    The widgets page names the REST API as the escape hatch for custom UI — the provider's own
+    positioning of the API in components/ terms.
+platform_integrations:
+  note: >-
+    Not client-side components, but the no-code surface that competes with them. Listed for context.
+  ecommerce:
+  - Shopify
+  - BigCommerce
+  - Adobe Commerce
+  - Maropost Commerce Cloud / Neto
+  - WooCommerce
+  - Miva
+  marketing:
+  - Google Seller Ratings
+  - Google Product Reviews
+  - Fomo
+  - Facebook (Meta for Business)
+  - X (formerly Twitter)
+  - TrustedSite
+  customer_support:
+  - Zendesk
+  loyalty:
+  - LoyaltyLion
+  - Zinrelo
+family_count: 5

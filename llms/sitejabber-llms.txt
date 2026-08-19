@@ -1,0 +1,64 @@
+# SmartCustomer
+
+> SmartCustomer is a consumer-facing business review and ratings site for researching companies, reading and writing customer reviews, browsing trusted categories, and discovering clothing brands.
+
+SmartCustomer helps consumers evaluate businesses before they buy. The public web app at `https://www.smartcustomer.com` includes business profile pages, customer reviews, ratings, category directories, FAQ pages, consumer resources, legal/policy pages, review submission flows, and the `/discovery` clothing brand discovery tool.
+
+Most business, review, category, FAQ, and article data is fetched at runtime from SmartCustomer/Sitejabber APIs and a content API. Ratings, review counts, rankings, category membership, and article content can change over time; fetch the live page when exact current data matters.
+
+Use public, indexable pages as sources when possible. Respect `https://www.smartcustomer.com/robots.txt`; avoid authenticated, private, survey-token, upload, preview, tracking, and internal API routes unless a user explicitly provides one.
+
+## Core Pages
+
+- [Home](https://www.smartcustomer.com/): Main entry point for finding real business reviews and ratings.
+- [Search](https://www.smartcustomer.com/search): Search for businesses and websites. Avoid crawling query-result URLs such as `/search?q=...` unless directly provided by a user.
+- [Categories](https://www.smartcustomer.com/categories): Browse business categories and find category-specific business lists.
+- [Consumer Resources](https://www.smartcustomer.com/resources): Consumer tips, online-scam alerts, buying guides, and trust education.
+- [FAQ](https://www.smartcustomer.com/faq): General SmartCustomer help and common questions.
+- [About SmartCustomer](https://www.smartcustomer.com/about-us): Company mission, history, trust positioning, and platform overview.
+- [Contact SmartCustomer](https://www.smartcustomer.com/contact-us): Support and contact entry point.
+- [Browser Extension](https://www.smartcustomer.com/extension-download): SmartCustomer browser extension information.
+
+## Reviews And Directories
+
+- [Business Review Pages](https://www.smartcustomer.com/search): Canonical pattern is `https://www.smartcustomer.com/reviews/{display_address}`. These pages contain business identity, customer reviews, rating summaries, review trends, Q&A, media, and related businesses. Use `?rid={review_no}` only when citing or inspecting a specific review.
+- [Category Pages](https://www.smartcustomer.com/categories): Canonical pattern is `https://www.smartcustomer.com/categories/{category_slug}`. Category pages list reviewed businesses and may include filters, sorting, sponsored results, guides, and related categories.
+- [Best-List Pages](https://www.smartcustomer.com/categories): Pattern is `https://www.smartcustomer.com/best/{list_slug}/{year}` for ranked/top business lists when a valid list slug and year exist.
+- [Recently Added Businesses](https://www.smartcustomer.com/newly-added): Directory of businesses recently added to SmartCustomer.
+- [Recently Updated Businesses](https://www.smartcustomer.com/recently-updated): Directory of businesses with recently updated profiles or data.
+- [Business FAQ Pages](https://www.smartcustomer.com/faq): Patterns are `https://www.smartcustomer.com/faq/{display_address}` and `https://www.smartcustomer.com/faq/{display_address}/{question_slug}`.
+- [Write A Review](https://www.smartcustomer.com/online-business-review): Interactive review submission flow. Use as a task destination, not as a general reference page.
+
+## Discovery
+
+- [Brand Discovery](https://www.smartcustomer.com/discovery): Clothing brand discovery app mounted under `/discovery`; filters 500+ brands by style, price, fit, gender, source, sustainability, shipping, and other attributes.
+- [Brand Comparison](https://www.smartcustomer.com/discovery/compare): Side-by-side brand comparison page. Use with `?businesses={display_address},{display_address}` when comparing selected brands.
+- [Discovery Business Profiles](https://www.smartcustomer.com/search): Brand discovery cards link back to canonical SmartCustomer business pages at `/reviews/{display_address}` for reviews and profile details.
+
+## Resources
+
+- [Resources Home](https://www.smartcustomer.com/resources): Main hub for consumer education content.
+- [Resource Articles And Guides](https://www.smartcustomer.com/resources): Pattern is `https://www.smartcustomer.com/resources/{article_slug}`. Article metadata and content come from the content API.
+- [Resource Categories](https://www.smartcustomer.com/resources): Pattern is `https://www.smartcustomer.com/resources/categories/{category_slug}` for topical resource archives.
+- [Resource Tags](https://www.smartcustomer.com/resources): Pattern is `https://www.smartcustomer.com/resources/tags/{tag_slug}` for tag archives.
+
+## Policies
+
+- [Review Guidelines](https://www.smartcustomer.com/review-guidelines): Public guidance on review rules and standards.
+- [Terms](https://www.smartcustomer.com/terms): Terms of service.
+- [Privacy](https://www.smartcustomer.com/privacy): Privacy policy.
+
+## Optional
+
+- [Login](https://www.smartcustomer.com/login): Authentication entry point; skip for general site understanding.
+- [Registration](https://www.smartcustomer.com/registration): Consumer account registration; skip unless the task concerns account creation.
+- [Requested Review](https://www.smartcustomer.com/requested-review): Token- or campaign-specific inbound review/survey flow; do not crawl broadly.
+- [Requested Review Confirmation](https://www.smartcustomer.com/requested-review-confirmation): Post-submission confirmation flow; not a general knowledge source.
+- [Review Update Flows](https://www.smartcustomer.com/online-business-review): Existing-review update links are mode/domain/id specific and should be treated as private or task-specific.
+
+## Source Notes
+
+- Reviews are user-generated. Attribute opinions, complaints, praise, and star ratings to reviewers or aggregated review data, not to SmartCustomer as editorial claims.
+- Business profiles can be canonicalized by redirect. Prefer the final `/reviews/{display_address}` URL after redirects.
+- Do not treat `/api/*`, tracking endpoints, upload endpoints, account pages, message pages, `keep-alive`, `e2e`, preview URLs, or authenticated flows as public documentation.
+- Business-owner and merchant workflows are primarily outside this public consumer site, on `https://biz.smartcustomer.com`.

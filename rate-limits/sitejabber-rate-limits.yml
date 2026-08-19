@@ -1,0 +1,33 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sitejabber.com/ (Rate Limit section of the published SmartCustomer API reference)
+docs: https://api.sitejabber.com/
+note: >-
+  Limits are published as prose in the reference. No rate-limit response headers are documented —
+  the only documented runtime signal is the 429 status and error code 429 in the response envelope,
+  so a client cannot read remaining quota or a reset time and must back off blindly.
+limits:
+- scope: per-user-token
+  window: 10s
+  limit: 10
+  burst: null
+  note: "\"You can't make more than 10 calls in a 10 second window\" — the short-window throttle."
+- scope: per-user-token
+  window: 1h
+  limit: 1000
+  burst: null
+  note: "\"You are allowed 1000 calls per hour for each unique user token.\""
+exhaustion:
+  status: 429
+  message: Too many requests
+  error_code: 429
+  error_reason: Rate limit, too many requests
+  envelope: 'JSON body with success: false, status: ERROR, errorCode: 429'
+headers:
+  published: false
+  ratelimit_headers: []
+  retry_after: false
+  note: >-
+    The reference documents no X-RateLimit-*, RateLimit-* or Retry-After headers. Recorded as a real
+    absence, not as unchecked.
+limit_count: 2

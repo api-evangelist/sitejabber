@@ -1,0 +1,95 @@
+generated: '2026-08-13'
+method: probed
+source: live HTTPS probes of the SmartCustomer web host, business host and API host
+note: >-
+  Nothing was served. Every /.well-known/ path on the consumer and business hosts returns a hard 404
+  from the Next.js app. On the API host (api.smartcustomer.com / api.sitejabber.com) every path returns
+  HTTP 200 with the SAME Slate "API Reference" HTML page — a catch-all shell, not a document — so those
+  200s are recorded as misses. No WellKnown or SecurityTxt pointer is emitted in apis.yml, because the
+  provider serves no well-known document.
+hosts:
+- host: https://www.smartcustomer.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: https://www.sitejabber.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: https://biz.smartcustomer.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+- host: https://api.smartcustomer.com
+  note: >-
+    Catch-all host. Every path returns 200 with the Slate API Reference HTML shell, including paths
+    that cannot exist. Treated as a miss on every well-known probe.
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: null
+    body: html-shell
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    body: html-shell
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    body: html-shell
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    body: html-shell
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    file: null
+    body: html-shell
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: null
+    body: html-shell
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+    body: html-shell
+found: 0

@@ -1,0 +1,106 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/sitejabber-business-api-openapi.yml
+status: candidate
+note: >-
+  SmartCustomer/Sitejabber ships NO MCP server. Searched the provider's GitHub organization
+  (smartcustomer-reviews — four repos, none MCP), the API reference, the consumer and business sites,
+  npm and PyPI. Nothing found. The tools below are a CANDIDATE mapping derived from the OpenAPI
+  transcription so the surface can be reasoned about; no endpoint exists and none is guessed.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: derived
+  note: >-
+    mode is none because no server exists, hosted or local. Nothing was probed as an MCP endpoint,
+    because inventing a URL to probe would be the fabrication this pipeline forbids.
+server:
+  name: null
+  vendor: SmartCustomer
+  transport: null
+candidate_tools:
+- name: get_business
+  rest: getBusiness
+  description: Get profile, ratings and review counts for a business by domain.
+- name: get_businesses_bulk
+  rest: getBusinessesBulk
+  description: Get profiles for several businesses in one call.
+- name: get_business_reviews
+  rest: getBusinessReviews
+  description: Search and page a business's consumer reviews by keyword, label, date range and publication state.
+- name: get_business_review
+  rest: getBusinessReview
+  description: Fetch a single consumer review by review number.
+- name: publish_review
+  rest: publishReview
+  description: Publish an unpublished review. Write operation.
+- name: flag_review
+  rest: flagReview
+  description: Flag a review for moderation with a reason and a message. Write operation.
+- name: get_review_comments
+  rest: getReviewComments
+  description: List business replies on reviews.
+- name: add_review_comment
+  rest: addReviewComment
+  description: Post a business reply to a review. Write operation, publicly visible.
+- name: send_resolution_message
+  rest: sendResolutionMessage
+  description: Send a private resolution message to a reviewer. Write operation, contacts a real person.
+- name: get_messages
+  rest: getMessages
+  description: List inbox or sent messages with reviewers.
+- name: send_message
+  rest: sendMessage
+  description: Send a direct message to a reviewer. Write operation, contacts a real person.
+- name: create_review_request
+  rest: createReviewRequest
+  description: Request a review from a customer by email or SMS. Write operation, sends outbound mail.
+- name: remove_review_request
+  rest: removeReviewRequest
+  description: Cancel outstanding review requests for a customer.
+- name: get_products
+  rest: getProducts
+  description: Search the product catalog by keyword, sku, gtin, mpn, brand, category, price or review count.
+- name: add_product
+  rest: addProduct
+  description: Add a product to the catalog. Write operation.
+- name: remove_product
+  rest: removeProduct
+  description: Remove a product from the catalog. Write operation.
+- name: get_product_reviews
+  rest: getProductReviews
+  description: Search and page product reviews with rating, photo, date and catalog filters.
+- name: get_product_reviews_stats
+  rest: getProductReviewsStats
+  description: Aggregate product review statistics by sku, category, item group or brand.
+- name: get_top_rated_product
+  rest: getTopRatedProduct
+  description: Get the top rated product for a category.
+- name: get_product_questions
+  rest: getProductQuestions
+  description: List product Q&A.
+- name: access_customer_information
+  rest: accessCustomerInformation
+  description: >-
+    CCPA data-subject access for one customer email. HIGH SENSITIVITY — returns categorized personal
+    information. Should be gated behind explicit human authorization in any agent deployment.
+- name: remove_customer_information
+  rest: removeCustomerInformation
+  description: >-
+    CCPA data-subject deletion for one customer email. DESTRUCTIVE and irreversible. Should never be
+    exposed to an autonomous agent without a confirmation step.
+candidate_tool_count: 22
+excluded_operations:
+- operationId: login
+  reason: Credential exchange; belongs in the transport auth layer, not a tool.
+- operationId: addProductReview
+  reason: Writes a consumer review on a customer's behalf. Excluded from the candidate set deliberately.
+- operationId: addProductReviewVote
+  reason: Vote manipulation risk; excluded from the candidate set deliberately.
+agent_readiness_note: >-
+  If SmartCustomer ever ships a server, the two Privacy operations and every outbound-messaging
+  operation are the ones that need explicit consent gating — this API can email and text real
+  customers and can permanently delete their records.

@@ -1,0 +1,2242 @@
+# generated: '2026-08-13'
+# method: generated
+# source: https://api.sitejabber.com/ (SmartCustomer published API reference; Slate source at https://github.com/smartcustomer-reviews/business-api-docs)
+openapi: 3.1.0
+info:
+  title: SmartCustomer (Sitejabber) Business API
+  version: v1
+  summary: Business review, product review, review request, messaging and privacy API for SmartCustomer (formerly Sitejabber).
+  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/
+    (Slate source: https://github.com/smartcustomer-reviews/business-api-docs). SmartCustomer does not publish an OpenAPI
+    definition; every path, parameter, default, enum and schema field below is copied from the provider''s published reference
+    tables. Where the reference names an object but publishes no field table (ProductCategory, ProductAttribute) the schema
+    is left open rather than invented. Response wrappers are modelled from the published example payloads and the documented
+    status/success envelope.
+
+
+    Authentication is two-part: a client_token (API key) passed as a query parameter on every call, plus a user_token request
+    header obtained from POST /login.'
+  contact:
+    name: SmartCustomer API Support
+    email: support@smartcustomer.com
+    url: https://api.sitejabber.com/
+  termsOfService: https://www.smartcustomer.com/terms
+  x-transcribed-by: API Evangelist enrichment pipeline
+  x-transcription-source: https://api.sitejabber.com/
+servers:
+- url: https://api.smartcustomer.com/v1
+  description: Production. The same reference is also served from https://api.sitejabber.com/ under the pre-rebrand Sitejabber
+    name.
+externalDocs:
+  description: SmartCustomer API reference
+  url: https://api.sitejabber.com/
+security:
+- client_token: []
+  user_token: []
+tags:
+- name: Authentication
+- name: Business Info
+- name: Business Questions
+- name: Reviews
+- name: Review Comments
+- name: Resolution Attempts
+- name: Messages
+- name: Review Requests
+- name: Partners
+- name: Products
+- name: Product Questions
+- name: Product Reviews
+- name: Product Review Requests
+- name: Privacy
+paths:
+  /login:
+    post:
+      operationId: login
+      summary: Log in and obtain a user token
+      tags:
+      - Authentication
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/LoginObject'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      description: Exchanges account credentials for a user token used in subsequent calls in the user_token header. The token
+        typically expires after 6 months. Calling login invalidates any previously generated user token.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Account email
+                password:
+                  type: string
+                  description: Account password
+              required:
+              - email
+              - password
+      security:
+      - client_token: []
+  /businesses/{business}:
+    get:
+      operationId: getBusiness
+      summary: Get info for a given business
+      tags:
+      - Business Info
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/UrlObjectWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: datasources
+        in: query
+        description: include ratings from specified comma separated data sources (check the data sources section)
+        required: false
+        schema:
+          type: string
+          default: 'false'
+  /businesses/bulk:
+    get:
+      operationId: getBusinessesBulk
+      summary: Get info for several businesses
+      tags:
+      - Business Info
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/UrlListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - name: businesses
+        in: query
+        description: all businesses to be queried encoded and json format
+        required: true
+        schema:
+          type: string
+  /businesses/{business}/questions:
+    get:
+      operationId: getBusinessQuestions
+      summary: Get questions
+      tags:
+      - Business Questions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/QuestionListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: start
+        in: query
+        description: starting offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: count
+        in: query
+        description: number of questions to be included (max 100)
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - name: order
+        in: query
+        description: ASC/DESC order of the questions, ascending or descending on the creation date
+        required: false
+        schema:
+          type: string
+          default: DESC
+  /businesses/{business}/review:
+    get:
+      operationId: getBusinessReview
+      summary: Get a review of a business
+      tags:
+      - Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/ReviewWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: review_no
+        in: query
+        description: number of review to be retrieved
+        required: true
+        schema:
+          type: integer
+  /businesses/{business}/reviews:
+    get:
+      operationId: getBusinessReviews
+      summary: Get reviews of a business
+      tags:
+      - Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/ReviewListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: start
+        in: query
+        description: starting offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: count
+        in: query
+        description: number of reviews to be included (max 100)
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - name: q
+        in: query
+        description: search reviews by keyword (title, content)
+        required: false
+        schema:
+          type: string
+      - name: labels
+        in: query
+        description: search reviews with the specified comma separated labels
+        required: false
+        schema:
+          type: string
+      - name: date_from
+        in: query
+        description: start date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional
+        required: false
+        schema:
+          type: string
+      - name: date_to
+        in: query
+        description: end date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional
+        required: false
+        schema:
+          type: string
+      - name: unpublished
+        in: query
+        description: include unpublished reviews (0 or 1)
+        required: false
+        schema:
+          type: string
+          default: 'false'
+      - name: updated
+        in: query
+        description: search updated reviews (0 or 1)
+        required: false
+        schema:
+          type: string
+          default: 'false'
+      - name: deleted
+        in: query
+        description: returns only deleted reviews (0 or 1)
+        required: false
+        schema:
+          type: string
+          default: 'false'
+      - name: solicited
+        in: query
+        description: returns organic or solicited reviews (0 or 1), defaults to all reviews
+        required: false
+        schema:
+          type: string
+      - name: datasources
+        in: query
+        description: include reviews from specified comma separated data sources (check the data sources section)
+        required: false
+        schema:
+          type: string
+          default: 'false'
+      - name: order
+        in: query
+        description: ASC/DESC order of the reviews, ascending or descending on the creation date
+        required: false
+        schema:
+          type: string
+          default: DESC
+  /businesses/{business}/reviews/publish:
+    post:
+      operationId: publishReview
+      summary: Publish an unpublished review
+      tags:
+      - Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                review_no:
+                  type: integer
+                  description: number of review to be published
+              required:
+              - review_no
+  /businesses/{business}/reviews/flag:
+    post:
+      operationId: flagReview
+      summary: Flag a review
+      tags:
+      - Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - review_no
+              - reason
+              - message
+              properties:
+                review_no:
+                  type: integer
+                  description: number of review to be flagged
+                reason:
+                  type: string
+                  description: 'reason can be one of the following: language, personal_info, personal_attack, second_hand,
+                    another_biz, other. language: Review contains profanity, lewdness, or bigotry; personal_info: Review contains
+                    personal information; personal_attack: Review contains personal attacks; second_hand: Review describes
+                    second-hand experience; another_biz: Review was intended for another business; other: Other'
+                  enum:
+                  - language
+                  - personal_info
+                  - personal_attack
+                  - second_hand
+                  - another_biz
+                  - other
+                message:
+                  type: string
+                  description: feedback message explaining the reason
+  /businesses/{business}/review/comments:
+    get:
+      operationId: getReviewComments
+      summary: Get review comments
+      tags:
+      - Review Comments
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/CommentListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: review_no
+        in: query
+        description: number of review to fetch comments from
+        required: false
+        schema:
+          type: integer
+      - name: start
+        in: query
+        description: starting offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: count
+        in: query
+        description: number of comments to be included (max 100)
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - name: date_from
+        in: query
+        description: start date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional
+        required: false
+        schema:
+          type: string
+      - name: date_to
+        in: query
+        description: end date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional
+        required: false
+        schema:
+          type: string
+      - name: updated
+        in: query
+        description: returns only updated comments (0 or 1)
+        required: false
+        schema:
+          type: string
+          default: 'false'
+      - name: deleted
+        in: query
+        description: returns only deleted comments (0 or 1)
+        required: false
+        schema:
+          type: string
+          default: 'false'
+      - name: datasources
+        in: query
+        description: include comments from specified comma separated data sources (check the data sources section)
+        required: false
+        schema:
+          type: string
+          default: 'false'
+  /businesses/{business}/review/comments/add:
+    post:
+      operationId: addReviewComment
+      summary: Add comment to review
+      tags:
+      - Review Comments
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                review_no:
+                  type: integer
+                  description: number of review to which comment will be added
+                text:
+                  type: string
+                  description: text of the comment
+              required:
+              - review_no
+              - text
+  /businesses/{business}/resolution/send:
+    post:
+      operationId: sendResolutionMessage
+      summary: Send resolution message to user
+      tags:
+      - Resolution Attempts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                review_no:
+                  type: integer
+                  description: number of review whose author will receive a message
+                username:
+                  type: string
+                  description: author that will receive a message
+                body:
+                  type: string
+                  description: content of the message
+              required:
+              - review_no
+              - username
+              - body
+  /businesses/{business}/messages:
+    get:
+      operationId: getMessages
+      summary: Get messages
+      tags:
+      - Messages
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/MessageListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: start
+        in: query
+        description: starting offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: count
+        in: query
+        description: number of messages to be included (max 100)
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - name: username
+        in: query
+        description: get messages for specific user if given
+        required: false
+        schema:
+          type: string
+      - name: folder
+        in: query
+        description: inbox/sent for received or sent messages
+        required: false
+        schema:
+          type: string
+          default: inbox
+      - name: order
+        in: query
+        description: ASC/DESC order of the messages, ascending or descending
+        required: false
+        schema:
+          type: string
+          default: DESC
+  /businesses/{business}/message/send:
+    post:
+      operationId: sendMessage
+      summary: Send message to user
+      tags:
+      - Messages
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                review_no:
+                  type: integer
+                  description: number of review whose author will receive a message
+                username:
+                  type: string
+                  description: author that will receive a message
+                subject:
+                  type: string
+                  description: subject of the message
+                body:
+                  type: string
+                  description: content of the message
+              required:
+              - review_no
+              - username
+              - subject
+              - body
+  /businesses/{business}/review/request/add:
+    post:
+      operationId: createReviewRequest
+      summary: Create review request
+      tags:
+      - Review Requests
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      description: 'One of email or phone is required: the reference marks both required, noting each is required only if
+        the other is not provided.'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email of the customer, required if phone is not provided
+                phone:
+                  type: string
+                  description: phone of the customer, required if email is not provided
+                order_id:
+                  type: string
+                  description: order id of the purchase
+                order_date:
+                  type: string
+                  description: order date of the purchase in yyyy-mm-dd format
+                first_name:
+                  type: string
+                  description: first name of the customer
+                last_name:
+                  type: string
+                  description: last name of the customer
+                labels:
+                  type: string
+                  description: comma separated labels to attach to the review after it's completed by the customer
+                location:
+                  type: string
+                  description: business location identifier
+                language:
+                  type: string
+                  description: language for the request
+                product_skus:
+                  type: string
+                  description: product SKUs of the purchase (comma separated)
+                return_link:
+                  type: integer
+                  description: (1 => true, 0 => false), if true, returns the link to complete the review, and does not send
+                    the review request email
+              required:
+              - order_id
+              - order_date
+  /businesses/{business}/review/request/remove:
+    post:
+      operationId: removeReviewRequest
+      summary: Remove review request
+      tags:
+      - Review Requests
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email of the customer
+                order_id:
+                  type: string
+                  description: order id of the purchase, if not specified all requests for the given email will be removed
+              required:
+              - email
+  /partners/{business}/write-link/get:
+    get:
+      operationId: getWriteReviewLink
+      summary: Get write review link
+      tags:
+      - Partners
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/PartnerWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      description: Get the link to write a review for the given business.
+      parameters:
+      - $ref: '#/components/parameters/business'
+  /partners/{business}/edit-link/get:
+    get:
+      operationId: getEditReviewLink
+      summary: Get edit review link
+      tags:
+      - Partners
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/PartnerWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      description: User must still login to edit the review.
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: email
+        in: query
+        description: email of the reviewer whose review link is requested (shown in the reference's request example)
+        required: false
+        schema:
+          type: string
+  /businesses/{business}/products:
+    get:
+      operationId: getProducts
+      summary: Get products
+      tags:
+      - Products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/ProductListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: start
+        in: query
+        description: starting offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: count
+        in: query
+        description: number of products to be included (max 100)
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - name: q
+        in: query
+        description: retrieve products matching given keyword
+        required: false
+        schema:
+          type: string
+      - name: sku
+        in: query
+        description: retrieve the given product by sku
+        required: false
+        schema:
+          type: string
+      - name: gtin
+        in: query
+        description: retrieve the given product by gtin
+        required: false
+        schema:
+          type: string
+      - name: mpn
+        in: query
+        description: retrieve the given product by mpn
+        required: false
+        schema:
+          type: string
+      - name: brand
+        in: query
+        description: retrieve products matching brand
+        required: false
+        schema:
+          type: string
+      - name: categories
+        in: query
+        description: retrieve products in the given categories
+        required: false
+        schema:
+          type: string
+      - name: price_range
+        in: query
+        description: retrieve products in the given prices [min],[max]
+        required: false
+        schema:
+          type: string
+      - name: reviews_range
+        in: query
+        description: retrieve products with the given number of reviews [min],[max]
+        required: false
+        schema:
+          type: string
+      - name: product_id
+        in: query
+        description: retrieve the given product ID
+        required: false
+        schema:
+          type: integer
+  /businesses/{business}/products/add:
+    post:
+      operationId: addProduct
+      summary: Add product
+      tags:
+      - Products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sku:
+                  type: string
+                  description: product sku
+                item_group:
+                  type: string
+                  description: product item group
+                gtin:
+                  type: string
+                  description: product gtin
+                mpn:
+                  type: string
+                  description: product mpn
+                title:
+                  type: string
+                  description: product title
+                description:
+                  type: string
+                  description: product description
+                brand:
+                  type: string
+                  description: product brand
+                categories:
+                  type: string
+                  description: categories this product belongs to, comma separated
+                currency:
+                  type: string
+                  description: product currency
+                price:
+                  type: number
+                  description: product price
+                retail_price:
+                  type: number
+                  description: product retail price
+                product_link:
+                  type: string
+                  description: product link
+                image_url:
+                  type: string
+                  description: product image url
+                attributes:
+                  type: string
+                  description: custom attributes for the product
+              required:
+              - sku
+              - title
+  /businesses/{business}/products/remove:
+    post:
+      operationId: removeProduct
+      summary: Remove product
+      tags:
+      - Products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+                  description: product ID
+              required:
+              - product_id
+  /businesses/{business}/product/images/add:
+    post:
+      operationId: addProductImage
+      summary: Add product image
+      tags:
+      - Products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sku:
+                  type: string
+                  description: product sku
+                image:
+                  type: string
+                  description: image url
+              required:
+              - sku
+              - image
+  /businesses/{business}/product/questions:
+    get:
+      operationId: getProductQuestions
+      summary: Get product questions
+      tags:
+      - Product Questions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/ProductQuestionListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: start
+        in: query
+        description: starting offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: count
+        in: query
+        description: number of questions to be included (max 100)
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - name: sku
+        in: query
+        description: search questions by the given product sku
+        required: false
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: PENDING/PUBLISHED/REMOVED, defaults to non removed questions
+        required: false
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: ASC/DESC order of the questions, ascending or descending on the creation date
+        required: false
+        schema:
+          type: string
+          default: DESC
+  /businesses/{business}/product/reviews:
+    get:
+      operationId: getProductReviews
+      summary: Get product reviews
+      tags:
+      - Product Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/ProductReviewListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: start
+        in: query
+        description: starting offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: count
+        in: query
+        description: number of reviews to be included (max 100)
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - name: sku
+        in: query
+        description: retrieve reviews for the given product sku
+        required: false
+        schema:
+          type: string
+      - name: item_group
+        in: query
+        description: retrieve reviews for the given group of products, if specified, sku is ignored
+        required: false
+        schema:
+          type: string
+      - name: q
+        in: query
+        description: retrieve product reviews matching given keywords
+        required: false
+        schema:
+          type: string
+      - name: brand
+        in: query
+        description: retrieve products matching brand
+        required: false
+        schema:
+          type: string
+      - name: categories
+        in: query
+        description: retrieve products in the given categories
+        required: false
+        schema:
+          type: string
+      - name: only_photos
+        in: query
+        description: retrieve product reviews containing customer product images, default 0 (1=Yes, 0=No)
+        required: false
+        schema:
+          type: string
+      - name: price_range
+        in: query
+        description: retrieve products in the given prices [min],[max]
+        required: false
+        schema:
+          type: string
+      - name: reviews_range
+        in: query
+        description: retrieve products with the given number of reviews [min],[max]
+        required: false
+        schema:
+          type: string
+      - name: ratings
+        in: query
+        description: returns only product reviews with the specified comma separated ratings, for example (3,4,5), defaults
+          to all ratings
+        required: false
+        schema:
+          type: string
+      - name: deleted
+        in: query
+        description: returns only deleted product reviews (0 or 1)
+        required: false
+        schema:
+          type: string
+      - name: date_from
+        in: query
+        description: start date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional
+        required: false
+        schema:
+          type: string
+      - name: date_to
+        in: query
+        description: end date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional
+        required: false
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: specifies the order (created=most recent, relevant=most relevant), defaults to most recent
+        required: false
+        schema:
+          type: string
+  /businesses/{business}/product/reviews/add:
+    post:
+      operationId: addProductReview
+      summary: Add product review
+      tags:
+      - Product Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      description: image{n} / caption{n} repeat for each additional image (image2/caption2, image3/caption3, ...).
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sku:
+                  type: string
+                  description: product SKU
+                title:
+                  type: string
+                  description: product review title
+                content:
+                  type: string
+                  description: product review content
+                rating:
+                  type: integer
+                  description: product review rating
+                order_id:
+                  type: string
+                  description: product review order id
+                first_name:
+                  type: string
+                  description: first name of the user writing the review
+                last_name:
+                  type: string
+                  description: last name of the user writing the review
+                email:
+                  type: string
+                  description: email of the user writing the review
+                user_location:
+                  type: string
+                  description: location of the user writing the review
+                location:
+                  type: string
+                  description: business location identifier
+                attributes:
+                  type: string
+                  description: values of attributes defined for the product
+                image1:
+                  type: string
+                  description: can be used to send multiple images (image1, image2, ...., image{n}); it can be image binary
+                    data or a url pointing to an image file. The images are uploaded in the order specified.
+                caption1:
+                  type: string
+                  description: can be used to set a caption for the image (caption1, caption2, ...., caption{n})
+              required:
+              - sku
+              - title
+              - content
+              - rating
+  /businesses/{business}/product/reviews/vote:
+    post:
+      operationId: addProductReviewVote
+      summary: Add product review vote
+      tags:
+      - Product Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      description: A user can vote only once every 24 hours (error code 404).
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - review_id
+              - vote
+              properties:
+                review_id:
+                  type: integer
+                  description: product review ID
+                vote:
+                  type: string
+                  description: type of vote (positive/negative)
+                  enum:
+                  - positive
+                  - negative
+  /businesses/{business}/product/reviews/top-rated:
+    get:
+      operationId: getTopRatedProduct
+      summary: Get top rated product
+      tags:
+      - Product Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/ProductListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: category_name
+        in: query
+        description: The name of category to get the top rated product
+        required: false
+        schema:
+          type: string
+      - name: currency
+        in: query
+        description: Add currency filter, used to filter by country
+        required: false
+        schema:
+          type: string
+  /businesses/{business}/product/reviews/stats:
+    get:
+      operationId: getProductReviewsStats
+      summary: Get product reviews stats
+      tags:
+      - Product Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: sku
+        in: query
+        description: retrieve stats for the given product sku
+        required: false
+        schema:
+          type: string
+      - name: categories
+        in: query
+        description: retrieve stats for products in the given categories (separated by commas)
+        required: false
+        schema:
+          type: string
+      - name: item_group
+        in: query
+        description: retrieve stats for the given group of products, if specified sku is ignored
+        required: false
+        schema:
+          type: string
+      - name: brand
+        in: query
+        description: retrieve stats for products in the given brand
+        required: false
+        schema:
+          type: string
+  /businesses/{business}/product/review/request/add:
+    post:
+      operationId: createProductReviewRequest
+      summary: Create product review request
+      tags:
+      - Product Review Requests
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email of the customer
+                product_skus:
+                  type: string
+                  description: product SKUs of the purchase (comma separated)
+                order_id:
+                  type: string
+                  description: order id of the purchase
+                order_date:
+                  type: string
+                  description: order date of the purchase in yyyy-mm-dd format
+                first_name:
+                  type: string
+                  description: first name of the customer
+                last_name:
+                  type: string
+                  description: last name of the customer
+                location:
+                  type: string
+                  description: business location identifier
+                language:
+                  type: string
+                  description: language for the request
+                return_link:
+                  type: integer
+                  description: (1 => true, 0 => false), if true, returns the link to complete the products review, and does
+                    not send the products review request emails
+              required:
+              - email
+              - product_skus
+              - order_id
+              - order_date
+  /businesses/{business}/product/review/request/remove:
+    post:
+      operationId: removeProductReviewRequest
+      summary: Remove product review request
+      tags:
+      - Product Review Requests
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email of the customer
+                product_sku:
+                  type: string
+                  description: product sku of the purchase, if not specified all request for the given email will be removed
+                order_id:
+                  type: string
+                  description: order id of the purchase, if not specified all requests for the given email will be removed
+              required:
+              - email
+  /businesses/{business}/privacy/access:
+    get:
+      operationId: accessCustomerInformation
+      summary: Access customer information
+      tags:
+      - Privacy
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      description: This call only works if the customer's email has been provided by the given business.
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: email
+        in: query
+        description: user's email
+        required: true
+        schema:
+          type: string
+  /businesses/{business}/privacy/remove:
+    post:
+      operationId: removeCustomerInformation
+      summary: Remove customer information
+      tags:
+      - Privacy
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      description: This call only works if the customer's email has been provided by the given business.
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: user's email
+              required:
+              - email
+components:
+  securitySchemes:
+    client_token:
+      type: apiKey
+      in: query
+      name: client_token
+      description: API key issued to the business, passed as a query parameter on every request.
+    user_token:
+      type: apiKey
+      in: header
+      name: user_token
+      description: User session token returned by POST /login. Typically expires after 6 months; calling login invalidates
+        any previous token.
+  parameters:
+    business:
+      name: business
+      in: path
+      required: true
+      description: The business's display address (domain without scheme), e.g. yourdomain.com
+      schema:
+        type: string
+      example: yourdomain.com
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
+  schemas:
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode
+        and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
+    Address:
+      type: object
+      title: Address Object
+      properties:
+        streetAddress:
+          type: string
+          description: Street address
+        streetAddress2:
+          type: string
+          description: Street address second line
+        city:
+          type: string
+          description: City
+        state:
+          type: string
+          description: State
+        postalCode:
+          type: string
+          description: Postal code
+        country:
+          type: string
+          description: Country
+        completeAddress:
+          type: string
+          description: All fields defining the complete address
+    Rating:
+      type: object
+      title: Rating Object
+      required:
+      - type
+      - rating
+      properties:
+        type:
+          type: string
+          description: 'Possible values: overall, service, value, shipping, returns, quality'
+          enum:
+          - overall
+          - service
+          - value
+          - shipping
+          - returns
+          - quality
+        rating:
+          type: number
+          description: Float value between 1 and 5
+          minimum: 1
+          maximum: 5
+    NumReviews:
+      type: object
+      title: NumReviews Object
+      required:
+      - type
+      - rating
+      properties:
+        type:
+          type: string
+          description: 'Possible values: total, fiveStars, fourStars, threeStars, twoStars, oneStar'
+          enum:
+          - total
+          - fiveStars
+          - fourStars
+          - threeStars
+          - twoStars
+          - oneStar
+        rating:
+          type: integer
+          description: Number of reviews
+    User:
+      type: object
+      title: User Object
+      required:
+      - username
+      - firstName
+      - lastName
+      - thumbnail
+      - profilePage
+      - numReviews
+      - numHelpfulVotes
+      properties:
+        username:
+          type: string
+          description: Username of the user
+        firstName:
+          type: string
+          description: First name of the user
+        lastName:
+          type: string
+          description: First letter of last name of the user
+        thumbnail:
+          type: string
+          description: Relative path of the user's thumbnail image
+        profilePage:
+          type: string
+          description: Url of the user's profile page
+        numReviews:
+          type: integer
+          description: Number of reviews written by the user
+        numHelpfulVotes:
+          type: integer
+          description: Number of helpful votes received
+        email:
+          type: string
+          description: Only available for solicited reviews and when the email of the user was provided by the business
+    Url:
+      type: object
+      title: Url Object
+      required:
+      - name
+      - urlAddress
+      - displayAddress
+      - urlProfilePage
+      - averageRating
+      - numReviews
+      - address
+      properties:
+        name:
+          type: string
+          description: Name of the business
+        urlAddress:
+          type: string
+          description: Url of the site
+        displayAddress:
+          type: string
+          description: Url of the site without http://
+        urlProfilePage:
+          type: string
+          description: Url of the site's profile page
+        averageRating:
+          type: array
+          description: Array of Rating object
+          items:
+            $ref: '#/components/schemas/Rating'
+        numReviews:
+          type: array
+          description: Array of NumReviews object
+          items:
+            $ref: '#/components/schemas/NumReviews'
+        phone:
+          type: string
+          description: Phone of the site
+        email:
+          type: string
+          description: Email of the site
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Address of the site
+    ReviewImage:
+      type: object
+      title: ReviewImage Object
+      properties:
+        caption:
+          type: string
+          description: Caption of the image
+        original:
+          type: string
+          description: Url of the image original size
+        normal:
+          type: string
+          description: Url of the image normal size, max width 600px
+        large:
+          type: string
+          description: Url of the image thumbnail large size 160x160
+        small:
+          type: string
+          description: Url of the image thumbnail small size 96x96
+        created:
+          type: string
+          description: Creation date of the image
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+          format: date-time
+    Review:
+      type: object
+      title: Review Object
+      properties:
+        reviewNo:
+          type: integer
+          description: Review number, identifier
+        rating:
+          type: array
+          description: Array of Rating object
+          items:
+            $ref: '#/components/schemas/Rating'
+        title:
+          type: string
+          description: Title for the review
+        content:
+          type: string
+          description: Content for the review
+        tip:
+          type: string
+          description: Tip for the review
+        order_id:
+          type: string
+          description: Order ID for the review
+        images:
+          type: array
+          description: Array of customer review images
+          items:
+            $ref: '#/components/schemas/ReviewImage'
+        positive_votes:
+          type: integer
+          description: Number of positive votes for the review
+        negative_votes:
+          type: integer
+          description: Number of negative votes for the review
+        created:
+          type: string
+          description: Review creation date
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        published:
+          type: string
+          description: If the review is not yet published, it'll contain the string pending
+        publishedRFC:
+          type: string
+          description: Same as published but in format RFC 3339
+        edited:
+          type: string
+          description: DateTime the review was edited
+        editedRFC:
+          type: string
+          description: Same as edited but in format RFC 3339
+        removedRFC:
+          type: string
+          description: DateTime the review was removed in format RFC 3339 (only available if the review is removed)
+        updated_for:
+          $ref: '#/components/schemas/Review'
+          description: If this is an updated review, this will contain the original review
+        source:
+          type: string
+          description: Only available for solicited reviews, indicates the source
+          enum:
+          - BCC
+          - CSV
+          - WEBHOOK
+          - CHECKOUT_WIDGET
+          - API
+          - WEB
+          - QUICK_REQUEST
+          - OTHER
+        datasource:
+          type: string
+          description: Indicates the 3rd party data source (check the data sources section)
+        labels:
+          type: array
+          description: Array of labels
+          items:
+            type: string
+        author:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the review
+    Comment:
+      type: object
+      title: Comment Object
+      properties:
+        reviewNo:
+          type: integer
+          description: Review number, identifier
+        content:
+          type: string
+          description: Content of the comment
+        num_votes:
+          type: integer
+          description: Number of votes received
+        activated:
+          type: boolean
+          description: 0 - not activated, 1 - activated
+        created:
+          type: string
+          description: DateTime the comment was created
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        modified:
+          type: string
+          description: DateTime the comment was modified
+        modifiedRFC:
+          type: string
+          description: Same as modified but in format RFC 3339
+        published:
+          type: string
+          description: DateTime the comment was published
+        publishedRFC:
+          type: string
+          description: Same as published but in format RFC 3339
+        datasource:
+          type: string
+          description: Indicates the 3rd party data source (check the data sources section)
+        author:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the comment
+    Message:
+      type: object
+      title: Message Object
+      properties:
+        subject:
+          type: string
+          description: Subject of the message
+        body:
+          type: string
+          description: Body of the message
+        review:
+          allOf:
+          - $ref: '#/components/schemas/Review'
+          description: Review this message belongs to, if any
+        created:
+          type: string
+          description: Creation date of the message
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        recipient:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: User who received the message
+        sender:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: User who sent the message
+    Partner:
+      type: object
+      title: Partner Object
+      properties:
+        url:
+          type: string
+          description: Url link to access the requested review page
+        hash:
+          type: string
+          description: Hash identifier for the requested review page
+        expire:
+          type: string
+          description: When the link will expire
+    ProductImage:
+      type: object
+      title: ProductImage Object
+      properties:
+        caption:
+          type: string
+          description: Caption of the image
+        original:
+          type: string
+          description: Url of the image original size
+        normal:
+          type: string
+          description: Url of the image normal size, max width 600px
+        large:
+          type: string
+          description: Url of the image thumbnail large size 160x160
+        small:
+          type: string
+          description: Url of the image thumbnail small size 96x96
+        created:
+          type: string
+          description: Creation date of the image
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+    Product:
+      type: object
+      title: Product Object
+      properties:
+        id:
+          type: integer
+          description: Internal product ID
+        sku:
+          type: string
+          description: SKU of the product
+        item_group:
+          type: string
+          description: Used to group similar products together
+        gtin:
+          type: string
+          description: GTIN of the product
+        mpn:
+          type: string
+          description: MPN of the product
+        brand:
+          type: string
+          description: Brand of the product
+        title:
+          type: string
+          description: Title of the product
+        description:
+          type: string
+          description: Description of the product
+        categories:
+          type: array
+          description: Product categories
+          items:
+            $ref: '#/components/schemas/ProductCategory'
+        price:
+          type: number
+          description: Price of the product
+        retail_price:
+          type: number
+          description: Retail price of the product
+        currency:
+          type: string
+          description: Currency of the product
+        product_link:
+          type: string
+          description: Url link to the product's page
+        images:
+          type: array
+          description: Product images
+          items:
+            $ref: '#/components/schemas/ProductImage'
+        attributes:
+          type: array
+          description: Customer attributes
+          items:
+            $ref: '#/components/schemas/ProductAttribute'
+        num_reviews:
+          type: integer
+          description: Number of product reviews
+        average_rating:
+          type: number
+          description: Average rating of the product reviews
+        created:
+          type: string
+          description: Creation date of the product
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+    ProductReview:
+      type: object
+      title: ProductReview Object
+      properties:
+        id:
+          type: integer
+          description: Internal product review ID
+        title:
+          type: string
+          description: Title of the review
+        content:
+          type: string
+          description: Content of the review
+        rating:
+          type: integer
+          description: Rating of the review
+        order_id:
+          type: string
+          description: Order number for the review
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the review
+        user_location:
+          type: string
+          description: Location of the user
+        attributes:
+          type: array
+          description: Custom attributes
+          items:
+            $ref: '#/components/schemas/ProductAttribute'
+        images:
+          type: array
+          description: Array of customer product images
+          items:
+            $ref: '#/components/schemas/ProductImage'
+        solicited:
+          type: integer
+          description: Defines if the review was solicited or not, values are Yes/No
+        votes:
+          type: integer
+          description: Number of votes
+        num_positive_votes:
+          type: integer
+          description: Number of positive votes
+        num_negative_votes:
+          type: integer
+          description: Number of negative votes
+        published:
+          type: string
+          description: Publication date of the product
+        publishedRFC:
+          type: string
+          description: Same as published but in format RFC 3339
+        created:
+          type: string
+          description: Creation date of the product
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        product:
+          allOf:
+          - $ref: '#/components/schemas/Product'
+          description: Product of the review
+        removedRFC:
+          type: string
+          description: DateTime the product review was removed in format RFC 3339 (only available if the product review is
+            removed)
+    ProductAnswer:
+      type: object
+      title: ProductAnswer Object
+      properties:
+        id:
+          type: integer
+          description: Internal answer ID
+        content:
+          type: string
+          description: Content of the answer
+        created:
+          type: string
+          description: Creation date of the answer
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        published:
+          type: string
+          description: Publication date of the question
+        publishedRFC:
+          type: string
+          description: Same as published but in format RFC 3339
+        num_votes:
+          type: integer
+          description: Number of votes
+        num_positive_votes:
+          type: integer
+          description: Number of positive votes
+        num_negative_votes:
+          type: integer
+          description: Number of negative votes
+        author:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the answer
+    ProductQuestion:
+      type: object
+      title: ProductQuestion Object
+      properties:
+        id:
+          type: integer
+          description: Internal question ID
+        content:
+          type: string
+          description: Content of the question
+        created:
+          type: string
+          description: Creation date of the question
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        published:
+          type: string
+          description: Publication date of the question
+        publishedRFC:
+          type: string
+          description: Same as published but in format RFC 3339
+        removed:
+          type: boolean
+          description: Indicates if the question is removed
+        num_answers:
+          type: integer
+          description: Number of answers
+        sum_votes:
+          type: integer
+          description: Number of votes
+        answers:
+          type: array
+          description: Array of product answer objects
+          items:
+            $ref: '#/components/schemas/ProductAnswer'
+        product:
+          allOf:
+          - $ref: '#/components/schemas/Product'
+          description: Product of the question
+        author:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the question
+    Answer:
+      type: object
+      title: Answer Object
+      properties:
+        id:
+          type: integer
+          description: Internal answer ID
+        content:
+          type: string
+          description: Content of the answer
+        created:
+          type: string
+          description: Creation date of the answer
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        num_votes:
+          type: integer
+          description: Number of votes
+        author:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the answer
+    Question:
+      type: object
+      title: Question Object
+      properties:
+        id:
+          type: integer
+          description: Internal question ID
+        business:
+          type: string
+          description: Url belonging to the question
+        content:
+          type: string
+          description: Content of the question
+        created:
+          type: string
+          description: Creation date of the question
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        num_answers:
+          type: integer
+          description: Number of answers
+        slug:
+          type: string
+          description: Slug to access the question
+        sum_votes:
+          type: integer
+          description: Number of votes
+        answers:
+          type: array
+          description: Array of answer objects
+          items:
+            $ref: '#/components/schemas/Answer'
+        author:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the question
+    ProductCategory:
+      type: object
+      title: ProductCategory Object
+      description: Product category. The reference names this object on Product.categories but does not publish a field table
+        for it.
+      additionalProperties: true
+    ProductAttribute:
+      type: object
+      title: ProductAttribute Object
+      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes
+        but does not publish a field table for it.
+      additionalProperties: true
+    LoginObject:
+      type: object
+      title: Login Object
+      properties:
+        token:
+          type: string
+          description: Token used in subsequent calls as user identifier
+        expire:
+          type: string
+          description: When the token will expire (typically after 6 months)
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: User logged in into the system
+    UrlObjectWrapper:
+      type: object
+      properties:
+        url:
+          $ref: '#/components/schemas/Url'
+    UrlListWrapper:
+      type: object
+      properties:
+        urls:
+          type: array
+          items:
+            $ref: '#/components/schemas/Url'
+    ReviewWrapper:
+      type: object
+      properties:
+        review:
+          $ref: '#/components/schemas/Review'
+    ReviewListWrapper:
+      type: object
+      properties:
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+    CommentListWrapper:
+      type: object
+      properties:
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+    MessageListWrapper:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+    QuestionListWrapper:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    ProductListWrapper:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    ProductReviewListWrapper:
+      type: object
+      properties:
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductReview'
+    ProductQuestionListWrapper:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductQuestion'
+    PartnerWrapper:
+      type: object
+      properties:
+        partner:
+          $ref: '#/components/schemas/Partner'

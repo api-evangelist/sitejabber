@@ -1,0 +1,174 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/sitejabber-business-api-openapi.yml (schema $ref graph) + https://api.sitejabber.com/ Schema Definition tables
+summary: >-
+  Two parallel review graphs hanging off one Business (Url) root: a CONSUMER review graph
+  (Review -> Comment / Message / Question) and a PRODUCT review graph (Product -> ProductReview /
+  ProductQuestion -> ProductAnswer). User is the shared vertex — it authors reviews, comments,
+  questions and answers on both sides. The two graphs never join: a Review and a ProductReview share
+  no identifier, use different id field names (reviewNo vs id) and are returned by different endpoints.
+entities:
+- name: Url
+  label: Business
+  identifier: displayAddress
+  identifier_note: >-
+    The domain without a scheme. It is also the path segment for nearly every endpoint, so the
+    business identifier is a natural key, not an opaque ID.
+  relationships:
+  - type: has_many
+    target: Rating
+    via: averageRating
+  - type: has_many
+    target: NumReviews
+    via: numReviews
+  - type: has_one
+    target: Address
+    via: address
+- name: Review
+  label: Consumer review
+  identifier: reviewNo
+  relationships:
+  - type: has_many
+    target: Rating
+    via: rating
+  - type: has_many
+    target: ReviewImage
+    via: images
+  - type: belongs_to
+    target: User
+    via: author
+  - type: has_one
+    target: Review
+    via: updated_for
+    note: Self-reference. On an updated review this carries the original review.
+- name: Comment
+  label: Business reply to a review
+  identifier: reviewNo
+  identifier_note: A comment is keyed by the review it belongs to, not by its own id.
+  relationships:
+  - type: belongs_to
+    target: Review
+    via: reviewNo
+  - type: belongs_to
+    target: User
+    via: author
+- name: Message
+  label: Direct message between business and reviewer
+  identifier: null
+  relationships:
+  - type: has_one
+    target: Review
+    via: review
+  - type: belongs_to
+    target: User
+    via: sender
+  - type: belongs_to
+    target: User
+    via: recipient
+- name: Question
+  label: Business Q&A question
+  identifier: id
+  relationships:
+  - type: belongs_to
+    target: Url
+    via: business
+  - type: has_many
+    target: Answer
+    via: answers
+  - type: belongs_to
+    target: User
+    via: author
+- name: Answer
+  identifier: id
+  relationships:
+  - type: belongs_to
+    target: User
+    via: author
+- name: Product
+  identifier: id
+  alternate_keys:
+  - sku
+  - gtin
+  - mpn
+  - item_group
+  relationships:
+  - type: has_many
+    target: ProductCategory
+    via: categories
+  - type: has_many
+    target: ProductImage
+    via: images
+  - type: has_many
+    target: ProductAttribute
+    via: attributes
+- name: ProductReview
+  identifier: id
+  relationships:
+  - type: belongs_to
+    target: Product
+    via: product
+  - type: belongs_to
+    target: User
+    via: user
+  - type: has_many
+    target: ProductImage
+    via: images
+  - type: has_many
+    target: ProductAttribute
+    via: attributes
+- name: ProductQuestion
+  identifier: id
+  relationships:
+  - type: belongs_to
+    target: Product
+    via: product
+  - type: has_many
+    target: ProductAnswer
+    via: answers
+  - type: belongs_to
+    target: User
+    via: author
+- name: ProductAnswer
+  identifier: id
+  relationships:
+  - type: belongs_to
+    target: User
+    via: author
+- name: User
+  identifier: username
+  note: >-
+    lastName carries only the first letter of the surname. email is present only for solicited
+    reviews where the business supplied it. This is the pseudonymization boundary of the API.
+  relationships: []
+- name: Partner
+  label: Signed write/edit review link
+  identifier: hash
+  relationships: []
+  note: Short-lived link object with an expire timestamp; not a persisted resource.
+- name: Login
+  identifier: token
+  relationships:
+  - type: has_one
+    target: User
+    via: user
+value_objects:
+- Rating
+- NumReviews
+- Address
+- ReviewImage
+- ProductImage
+undocumented_shapes:
+- name: ProductCategory
+  note: Named on Product.categories but the reference publishes no field table. Left open in the OpenAPI rather than invented.
+- name: ProductAttribute
+  note: Named on Product.attributes and ProductReview.attributes but the reference publishes no field table.
+id_prefixes:
+  published: false
+  note: No prefixed or opaque identifiers. All IDs are bare integers, or the business domain string.
+pii_surface:
+  note: >-
+    Two endpoints operate directly on customer PII — GET /privacy/access returns a CCPA-category
+    breakdown of everything held about a customer email, and POST /privacy/remove deletes it. Both
+    are gated on the business having supplied that email. This is the most sensitive part of the
+    data model and is why the Privacy tag is separated in the OpenAPI.
+entity_count: 13

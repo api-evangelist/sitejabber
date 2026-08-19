@@ -1,0 +1,91 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  openapi/sitejabber-business-api-openapi.yml, conventions/sitejabber-conventions.yml,
+  errors/sitejabber-problem-types.yml and https://api.sitejabber.com/
+note: >-
+  Assertions about cross-cutting standards. Every "conforms: false" below is a recorded absence
+  backed by the published reference, not an untested guess.
+standards:
+- id: openapi
+  conforms: false
+  evidence: >-
+    SmartCustomer publishes no OpenAPI definition. The reference at api.sitejabber.com is a Slate
+    HTML site built from Markdown (github.com/smartcustomer-reviews/business-api-docs); the repo
+    contains no spec file. The OpenAPI in openapi/ was transcribed by API Evangelist from that
+    reference and is marked method: generated for exactly this reason.
+- id: oauth2
+  conforms: false
+  evidence: No OAuth flows. Authentication is a client_token query API key plus a user_token session header.
+- id: oidc
+  conforms: false
+  evidence: No /.well-known/openid-configuration on any host (all 404 or HTML shell) and no OIDC in the docs.
+- id: rfc9457
+  conforms: false
+  evidence: >-
+    Errors are a proprietary status/success/errorCode/errorReason JSON envelope returned with HTTP 200,
+    not application/problem+json.
+- id: rfc9116
+  name: security.txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on www.smartcustomer.com, www.sitejabber.com and biz.smartcustomer.com.
+- id: rfc8594
+  name: Sunset header
+  conforms: false
+  evidence: No deprecation or sunset policy is published; no Sunset/Deprecation headers documented.
+- id: pagination
+  conforms: true
+  evidence: >-
+    Consistent offset/limit pagination across all list endpoints — start (default 0), count
+    (default 10, max 100), order. Conforms as a documented convention, not to any named standard.
+- id: idempotency
+  conforms: false
+  evidence: >-
+    No idempotency key or dedupe mechanism, on an API whose write operations send email and SMS to
+    real customers.
+- id: json:api
+  conforms: false
+  evidence: Bespoke response envelope; no JSON:API document structure, type/id members or media type.
+- id: odata
+  conforms: false
+  evidence: No OData query options.
+- id: scim
+  conforms: false
+  evidence: No user-provisioning surface.
+- id: hypermedia
+  conforms: false
+  evidence: No links, no next-page cursor, no HAL/Siren. Clients construct every URL themselves.
+- id: rest-verb-semantics
+  conforms: false
+  evidence: >-
+    Actions are encoded in the path (/reviews/publish, /products/add, /products/remove,
+    /review/request/remove) and performed with POST. There are no PUT, PATCH or DELETE operations
+    anywhere in the API, and no 201/204 responses.
+- id: gdpr-ccpa-data-subject-endpoints
+  conforms: true
+  evidence: >-
+    GET /businesses/{business}/privacy/access and POST /businesses/{business}/privacy/remove
+    implement data-subject access and deletion programmatically. The access response is structured
+    by CCPA statutory categories (Identifiers, Customer records information, Protected classification
+    info, Commercial info, Biometric info, Internet or electronic activity, Geolocation data,
+    Sensory data, Professional or employment related, Education info, Inferences).
+  note: >-
+    This is unusual and worth calling out — most review platforms handle data-subject requests by
+    web form only. SmartCustomer exposes them as API operations shaped to the CCPA category list.
+compliance_certifications:
+  published: false
+  note: >-
+    No trust center, SOC 2 / ISO 27001 / PCI / HIPAA claim or certification page was found on the
+    consumer, business or API hosts. probe-security-programs.py returned vdp=none trust=none. No
+    Compliance pointer is emitted in apis.yml.
+event_surface:
+  asyncapi: false
+  webhooks_documented: false
+  note: >-
+    No event, streaming or webhook surface is documented. The reference's only mention of the word is
+    WEBHOOK as one enumerated value of Review.source, describing how a solicited review was
+    originally collected — it is not an outbound webhook a developer can subscribe to, and no
+    payload, endpoint registration or signature scheme is published. No AsyncAPI or Webhooks pointer
+    is emitted in apis.yml. Integration with the API is poll-only, which combined with the
+    1000 calls/hour limit is the practical ceiling on how fresh a downstream copy of the review data
+    can be kept.

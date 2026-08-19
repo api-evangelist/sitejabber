@@ -1,0 +1,1503 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SmartCustomer (Sitejabber) Business API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "client_token",
+      "value": "{{client_token}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Log in and obtain a user token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/login",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "email",
+                  "value": ""
+                },
+                {
+                  "name": "password",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "client_token",
+              "value": "{{client_token}}",
+              "placement": "query"
+            }
+          },
+          "docs": "Exchanges account credentials for a user token used in subsequent calls in the user_token header. The token typically expires after 6 months. Calling login invalidates any previously generated user token."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Business Info",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get info for a given business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "datasources",
+                "value": "",
+                "type": "query",
+                "description": "include ratings from specified comma separated data sources (check the data sources section)"
+              }
+            ]
+          },
+          "docs": "Get info for a given business"
+        },
+        {
+          "info": {
+            "name": "Get info for several businesses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/bulk",
+            "params": [
+              {
+                "name": "businesses",
+                "value": "",
+                "type": "query",
+                "description": "all businesses to be queried encoded and json format"
+              }
+            ]
+          },
+          "docs": "Get info for several businesses"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Business Questions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get questions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/questions",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "starting offset"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "number of questions to be included (max 100)"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "ASC/DESC order of the questions, ascending or descending on the creation date"
+              }
+            ]
+          },
+          "docs": "Get questions"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Reviews",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a review of a business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/review",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "review_no",
+                "value": "",
+                "type": "query",
+                "description": "number of review to be retrieved"
+              }
+            ]
+          },
+          "docs": "Get a review of a business"
+        },
+        {
+          "info": {
+            "name": "Get reviews of a business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/reviews",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "starting offset"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "number of reviews to be included (max 100)"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "search reviews by keyword (title, content)"
+              },
+              {
+                "name": "labels",
+                "value": "",
+                "type": "query",
+                "description": "search reviews with the specified comma separated labels"
+              },
+              {
+                "name": "date_from",
+                "value": "",
+                "type": "query",
+                "description": "start date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional"
+              },
+              {
+                "name": "date_to",
+                "value": "",
+                "type": "query",
+                "description": "end date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional"
+              },
+              {
+                "name": "unpublished",
+                "value": "",
+                "type": "query",
+                "description": "include unpublished reviews (0 or 1)"
+              },
+              {
+                "name": "updated",
+                "value": "",
+                "type": "query",
+                "description": "search updated reviews (0 or 1)"
+              },
+              {
+                "name": "deleted",
+                "value": "",
+                "type": "query",
+                "description": "returns only deleted reviews (0 or 1)"
+              },
+              {
+                "name": "solicited",
+                "value": "",
+                "type": "query",
+                "description": "returns organic or solicited reviews (0 or 1), defaults to all reviews"
+              },
+              {
+                "name": "datasources",
+                "value": "",
+                "type": "query",
+                "description": "include reviews from specified comma separated data sources (check the data sources section)"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "ASC/DESC order of the reviews, ascending or descending on the creation date"
+              }
+            ]
+          },
+          "docs": "Get reviews of a business"
+        },
+        {
+          "info": {
+            "name": "Publish an unpublished review",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/reviews/publish",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "review_no",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Publish an unpublished review"
+        },
+        {
+          "info": {
+            "name": "Flag a review",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/reviews/flag",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "review_no",
+                  "value": ""
+                },
+                {
+                  "name": "reason",
+                  "value": ""
+                },
+                {
+                  "name": "message",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Flag a review"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Review Comments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get review comments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/review/comments",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "review_no",
+                "value": "",
+                "type": "query",
+                "description": "number of review to fetch comments from"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "starting offset"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "number of comments to be included (max 100)"
+              },
+              {
+                "name": "date_from",
+                "value": "",
+                "type": "query",
+                "description": "start date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional"
+              },
+              {
+                "name": "date_to",
+                "value": "",
+                "type": "query",
+                "description": "end date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional"
+              },
+              {
+                "name": "updated",
+                "value": "",
+                "type": "query",
+                "description": "returns only updated comments (0 or 1)"
+              },
+              {
+                "name": "deleted",
+                "value": "",
+                "type": "query",
+                "description": "returns only deleted comments (0 or 1)"
+              },
+              {
+                "name": "datasources",
+                "value": "",
+                "type": "query",
+                "description": "include comments from specified comma separated data sources (check the data sources section)"
+              }
+            ]
+          },
+          "docs": "Get review comments"
+        },
+        {
+          "info": {
+            "name": "Add comment to review",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/review/comments/add",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "review_no",
+                  "value": ""
+                },
+                {
+                  "name": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Add comment to review"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Resolution Attempts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Send resolution message to user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/resolution/send",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "review_no",
+                  "value": ""
+                },
+                {
+                  "name": "username",
+                  "value": ""
+                },
+                {
+                  "name": "body",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Send resolution message to user"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Messages",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/messages",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "starting offset"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "number of messages to be included (max 100)"
+              },
+              {
+                "name": "username",
+                "value": "",
+                "type": "query",
+                "description": "get messages for specific user if given"
+              },
+              {
+                "name": "folder",
+                "value": "",
+                "type": "query",
+                "description": "inbox/sent for received or sent messages"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "ASC/DESC order of the messages, ascending or descending"
+              }
+            ]
+          },
+          "docs": "Get messages"
+        },
+        {
+          "info": {
+            "name": "Send message to user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/message/send",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "review_no",
+                  "value": ""
+                },
+                {
+                  "name": "username",
+                  "value": ""
+                },
+                {
+                  "name": "subject",
+                  "value": ""
+                },
+                {
+                  "name": "body",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Send message to user"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Review Requests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create review request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/review/request/add",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "email",
+                  "value": ""
+                },
+                {
+                  "name": "phone",
+                  "value": ""
+                },
+                {
+                  "name": "order_id",
+                  "value": ""
+                },
+                {
+                  "name": "order_date",
+                  "value": ""
+                },
+                {
+                  "name": "first_name",
+                  "value": ""
+                },
+                {
+                  "name": "last_name",
+                  "value": ""
+                },
+                {
+                  "name": "labels",
+                  "value": ""
+                },
+                {
+                  "name": "location",
+                  "value": ""
+                },
+                {
+                  "name": "language",
+                  "value": ""
+                },
+                {
+                  "name": "product_skus",
+                  "value": ""
+                },
+                {
+                  "name": "return_link",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "One of email or phone is required: the reference marks both required, noting each is required only if the other is not provided."
+        },
+        {
+          "info": {
+            "name": "Remove review request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/review/request/remove",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "email",
+                  "value": ""
+                },
+                {
+                  "name": "order_id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Remove review request"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Partners",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get write review link",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/partners/:business/write-link/get",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ]
+          },
+          "docs": "Get the link to write a review for the given business."
+        },
+        {
+          "info": {
+            "name": "Get edit review link",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/partners/:business/edit-link/get",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "email of the reviewer whose review link is requested (shown in the reference's request example)"
+              }
+            ]
+          },
+          "docs": "User must still login to edit the review."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Products",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/products",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "starting offset"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "number of products to be included (max 100)"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "retrieve products matching given keyword"
+              },
+              {
+                "name": "sku",
+                "value": "",
+                "type": "query",
+                "description": "retrieve the given product by sku"
+              },
+              {
+                "name": "gtin",
+                "value": "",
+                "type": "query",
+                "description": "retrieve the given product by gtin"
+              },
+              {
+                "name": "mpn",
+                "value": "",
+                "type": "query",
+                "description": "retrieve the given product by mpn"
+              },
+              {
+                "name": "brand",
+                "value": "",
+                "type": "query",
+                "description": "retrieve products matching brand"
+              },
+              {
+                "name": "categories",
+                "value": "",
+                "type": "query",
+                "description": "retrieve products in the given categories"
+              },
+              {
+                "name": "price_range",
+                "value": "",
+                "type": "query",
+                "description": "retrieve products in the given prices [min],[max]"
+              },
+              {
+                "name": "reviews_range",
+                "value": "",
+                "type": "query",
+                "description": "retrieve products with the given number of reviews [min],[max]"
+              },
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "retrieve the given product ID"
+              }
+            ]
+          },
+          "docs": "Get products"
+        },
+        {
+          "info": {
+            "name": "Add product",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/products/add",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "sku",
+                  "value": ""
+                },
+                {
+                  "name": "item_group",
+                  "value": ""
+                },
+                {
+                  "name": "gtin",
+                  "value": ""
+                },
+                {
+                  "name": "mpn",
+                  "value": ""
+                },
+                {
+                  "name": "title",
+                  "value": ""
+                },
+                {
+                  "name": "description",
+                  "value": ""
+                },
+                {
+                  "name": "brand",
+                  "value": ""
+                },
+                {
+                  "name": "categories",
+                  "value": ""
+                },
+                {
+                  "name": "currency",
+                  "value": ""
+                },
+                {
+                  "name": "price",
+                  "value": ""
+                },
+                {
+                  "name": "retail_price",
+                  "value": ""
+                },
+                {
+                  "name": "product_link",
+                  "value": ""
+                },
+                {
+                  "name": "image_url",
+                  "value": ""
+                },
+                {
+                  "name": "attributes",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Add product"
+        },
+        {
+          "info": {
+            "name": "Remove product",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/products/remove",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "product_id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Remove product"
+        },
+        {
+          "info": {
+            "name": "Add product image",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/product/images/add",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "sku",
+                  "value": ""
+                },
+                {
+                  "name": "image",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Add product image"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Product Questions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get product questions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/product/questions",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "starting offset"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "number of questions to be included (max 100)"
+              },
+              {
+                "name": "sku",
+                "value": "",
+                "type": "query",
+                "description": "search questions by the given product sku"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "PENDING/PUBLISHED/REMOVED, defaults to non removed questions"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "ASC/DESC order of the questions, ascending or descending on the creation date"
+              }
+            ]
+          },
+          "docs": "Get product questions"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Product Reviews",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get product reviews",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/product/reviews",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query",
+                "description": "starting offset"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "number of reviews to be included (max 100)"
+              },
+              {
+                "name": "sku",
+                "value": "",
+                "type": "query",
+                "description": "retrieve reviews for the given product sku"
+              },
+              {
+                "name": "item_group",
+                "value": "",
+                "type": "query",
+                "description": "retrieve reviews for the given group of products, if specified, sku is ignored"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "retrieve product reviews matching given keywords"
+              },
+              {
+                "name": "brand",
+                "value": "",
+                "type": "query",
+                "description": "retrieve products matching brand"
+              },
+              {
+                "name": "categories",
+                "value": "",
+                "type": "query",
+                "description": "retrieve products in the given categories"
+              },
+              {
+                "name": "only_photos",
+                "value": "",
+                "type": "query",
+                "description": "retrieve product reviews containing customer product images, default 0 (1=Yes, 0=No)"
+              },
+              {
+                "name": "price_range",
+                "value": "",
+                "type": "query",
+                "description": "retrieve products in the given prices [min],[max]"
+              },
+              {
+                "name": "reviews_range",
+                "value": "",
+                "type": "query",
+                "description": "retrieve products with the given number of reviews [min],[max]"
+              },
+              {
+                "name": "ratings",
+                "value": "",
+                "type": "query",
+                "description": "returns only product reviews with the specified comma separated ratings, for example (3,4,5), defaults to all ratings"
+              },
+              {
+                "name": "deleted",
+                "value": "",
+                "type": "query",
+                "description": "returns only deleted product reviews (0 or 1)"
+              },
+              {
+                "name": "date_from",
+                "value": "",
+                "type": "query",
+                "description": "start date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional"
+              },
+              {
+                "name": "date_to",
+                "value": "",
+                "type": "query",
+                "description": "end date in format (yyyy-mm-dd hh:mm:ss) [hh:mm:ss] is optional"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "specifies the order (created=most recent, relevant=most relevant), defaults to most recent"
+              }
+            ]
+          },
+          "docs": "Get product reviews"
+        },
+        {
+          "info": {
+            "name": "Add product review",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/product/reviews/add",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "sku",
+                  "value": ""
+                },
+                {
+                  "name": "title",
+                  "value": ""
+                },
+                {
+                  "name": "content",
+                  "value": ""
+                },
+                {
+                  "name": "rating",
+                  "value": ""
+                },
+                {
+                  "name": "order_id",
+                  "value": ""
+                },
+                {
+                  "name": "first_name",
+                  "value": ""
+                },
+                {
+                  "name": "last_name",
+                  "value": ""
+                },
+                {
+                  "name": "email",
+                  "value": ""
+                },
+                {
+                  "name": "user_location",
+                  "value": ""
+                },
+                {
+                  "name": "location",
+                  "value": ""
+                },
+                {
+                  "name": "attributes",
+                  "value": ""
+                },
+                {
+                  "name": "image1",
+                  "value": ""
+                },
+                {
+                  "name": "caption1",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "image{n} / caption{n} repeat for each additional image (image2/caption2, image3/caption3, ...)."
+        },
+        {
+          "info": {
+            "name": "Add product review vote",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/product/reviews/vote",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "review_id",
+                  "value": ""
+                },
+                {
+                  "name": "vote",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "A user can vote only once every 24 hours (error code 404)."
+        },
+        {
+          "info": {
+            "name": "Get top rated product",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/product/reviews/top-rated",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "category_name",
+                "value": "",
+                "type": "query",
+                "description": "The name of category to get the top rated product"
+              },
+              {
+                "name": "currency",
+                "value": "",
+                "type": "query",
+                "description": "Add currency filter, used to filter by country"
+              }
+            ]
+          },
+          "docs": "Get top rated product"
+        },
+        {
+          "info": {
+            "name": "Get product reviews stats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/product/reviews/stats",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "sku",
+                "value": "",
+                "type": "query",
+                "description": "retrieve stats for the given product sku"
+              },
+              {
+                "name": "categories",
+                "value": "",
+                "type": "query",
+                "description": "retrieve stats for products in the given categories (separated by commas)"
+              },
+              {
+                "name": "item_group",
+                "value": "",
+                "type": "query",
+                "description": "retrieve stats for the given group of products, if specified sku is ignored"
+              },
+              {
+                "name": "brand",
+                "value": "",
+                "type": "query",
+                "description": "retrieve stats for products in the given brand"
+              }
+            ]
+          },
+          "docs": "Get product reviews stats"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Product Review Requests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create product review request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/product/review/request/add",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "email",
+                  "value": ""
+                },
+                {
+                  "name": "product_skus",
+                  "value": ""
+                },
+                {
+                  "name": "order_id",
+                  "value": ""
+                },
+                {
+                  "name": "order_date",
+                  "value": ""
+                },
+                {
+                  "name": "first_name",
+                  "value": ""
+                },
+                {
+                  "name": "last_name",
+                  "value": ""
+                },
+                {
+                  "name": "location",
+                  "value": ""
+                },
+                {
+                  "name": "language",
+                  "value": ""
+                },
+                {
+                  "name": "return_link",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Create product review request"
+        },
+        {
+          "info": {
+            "name": "Remove product review request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/product/review/request/remove",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "email",
+                  "value": ""
+                },
+                {
+                  "name": "product_sku",
+                  "value": ""
+                },
+                {
+                  "name": "order_id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Remove product review request"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Privacy",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Access customer information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/privacy/access",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "user's email"
+              }
+            ]
+          },
+          "docs": "This call only works if the customer's email has been provided by the given business."
+        },
+        {
+          "info": {
+            "name": "Remove customer information",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.smartcustomer.com/v1/businesses/:business/privacy/remove",
+            "params": [
+              {
+                "name": "business",
+                "value": "yourdomain.com",
+                "type": "path",
+                "description": "The business's display address (domain without scheme), e.g. yourdomain.com"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "email",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "This call only works if the customer's email has been provided by the given business."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

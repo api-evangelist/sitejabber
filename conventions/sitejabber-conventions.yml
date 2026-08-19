@@ -1,0 +1,124 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sitejabber.com/ (published SmartCustomer API reference) + openapi/sitejabber-business-api-openapi.yml
+docs: https://api.sitejabber.com/
+summary: >-
+  A pre-REST-conventions HTTP API. Verbs live in the path (/reviews/publish, /products/add,
+  /review/request/remove) rather than in the HTTP method, every write is an
+  application/x-www-form-urlencoded POST, and every response — success or failure — is HTTP 200
+  carrying a status/success envelope. Agents must therefore parse the BODY to detect failure; the
+  HTTP status alone is not a reliable signal on this API.
+auth:
+  style: dual apiKey
+  detail: client_token in the query string on every call, user_token session header from POST /login
+  see: authentication/sitejabber-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    No idempotency key, no request-deduplication mechanism and no documented retry semantics. This
+    matters most on POST /businesses/{business}/review/request/add and
+    /product/review/request/add, which send email/SMS to a real customer — a retried request after a
+    timeout can re-send. The only guard the reference documents is error 304 "Email already exists".
+    No Idempotency pointer is emitted in apis.yml, because the provider does not support it.
+pagination:
+  style: offset-limit
+  params:
+    offset: start
+    limit: count
+  defaults:
+    start: 0
+    count: 10
+  max_page_size: 100
+  ordering:
+    param: order
+    values:
+    - ASC
+    - DESC
+    default: DESC
+    field: creation date
+    note: >-
+      Product reviews use a different vocabulary on the same parameter name — order=created (most
+      recent) or order=relevant (most relevant) — rather than ASC/DESC. An agent that assumes one
+      vocabulary across the API will silently get default ordering on that endpoint.
+  response_fields:
+    total: not published
+    next: not published
+  note: >-
+    No total count and no next-page cursor are documented, so a client cannot tell whether more
+    records exist except by requesting another page and seeing it come back short.
+filtering:
+  date_range:
+    params:
+    - date_from
+    - date_to
+    format: yyyy-mm-dd hh:mm:ss (hh:mm:ss optional)
+  numeric_range:
+    style: "[min],[max] in a single comma-separated string"
+    params:
+    - price_range
+    - reviews_range
+  csv_multivalue:
+    note: >-
+      Multi-value filters are comma-separated strings inside one parameter, not repeated parameters —
+      labels, categories, datasources, ratings, product_skus.
+  boolean_style: "0 / 1 integers (unpublished, updated, deleted, solicited, only_photos, return_link)"
+field_expansion:
+  supported: false
+  note: >-
+    No sparse-fieldset or expansion parameter. Related objects are always embedded in full (a Review
+    always carries its author User object; a ProductReview always carries its Product).
+metadata:
+  supported: partial
+  detail: >-
+    Business-defined `labels` can be attached to a review at request time and searched later; product
+    `attributes` carry custom key/values. There is no general-purpose metadata bag.
+request_id_tracing:
+  supported: false
+  note: No request-id or correlation header is documented on requests or responses.
+versioning:
+  style: URI path
+  current: v1
+  detail: https://api.smartcustomer.com/v1
+  see: lifecycle/sitejabber-lifecycle.yml
+error_envelope:
+  http_status_on_error: 200 for application errors; 429 for rate limiting
+  media_type: application/json
+  shape:
+    status: OK | ERROR
+    success: true | false
+    errorCode: integer, present only when status is ERROR
+    errorReason: string, present only when status is ERROR
+  rfc9457: false
+  gotcha: >-
+    Application error codes 401, 403, 404, 429 and 503 exist in the body namespace with meanings
+    unrelated to the HTTP statuses of the same number. Body errorCode 404 means "can vote only once
+    every 24 hours".
+  see: errors/sitejabber-problem-types.yml
+rate_limit_signaling:
+  headers_published: false
+  status: 429
+  detail: 1000 calls/hour per user token; max 10 calls per 10 second window
+  see: rate-limits/sitejabber-rate-limits.yml
+content_types:
+  request_write: application/x-www-form-urlencoded
+  request_read: query string
+  response: application/json
+resource_identity:
+  business: >-
+    Resources are addressed by the business display address (the domain without a scheme) in the path
+    — /businesses/yourdomain.com/... — not by an opaque ID.
+  review: reviewNo (integer) for consumer reviews; id for product reviews (note the different field name)
+third_party_datasources:
+  note: >-
+    Reads can be widened to aggregated third-party review sources with the `datasources` parameter.
+  codes:
+    bbb: Better Business Bureau
+    facebook: Facebook
+    lsa: Google Local Services
+    google: Google My Business
+    productreview: ProductReview
+    resellerratings: ResellerRatings
+    reviewsio: Reviews.io
+    trustpilot: Trustpilot
+    yelp: Yelp

@@ -1,0 +1,79 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sitejabber.com/ and https://github.com/smartcustomer-reviews/business-api-docs
+versioning:
+  style: URI path
+  current_version: v1
+  base: https://api.smartcustomer.com/v1
+  policy_published: false
+  note: >-
+    v1 is the only version ever published. The reference states no version policy, no support window
+    and no breaking-change process.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  deprecated_operations: []
+  note: >-
+    No deprecation policy, no RFC 8594 Sunset/Deprecation headers, and no operation in the reference
+    is marked deprecated. No Deprecation pointer is emitted in apis.yml.
+status_page:
+  published: false
+  probed:
+  - url: https://status.smartcustomer.com
+    status: 000
+    note: DNS does not resolve.
+  note: >-
+    No status page, uptime history or incident feed was found. The only availability signal in the
+    API is application error code 503 "Site under scheduled maintenance". No StatusPage pointer is
+    emitted in apis.yml.
+sla:
+  published: false
+changelog:
+  published: false
+  note: >-
+    No dated changelog page. The nearest proxy is commit history on the docs repo
+    (github.com/smartcustomer-reviews/business-api-docs), which is not a changelog and is not wired
+    as one.
+rebrand:
+  from: Sitejabber (sitejabber.com)
+  to: SmartCustomer (smartcustomer.com)
+  api_impact: >-
+    The rebrand is INCOMPLETE on the API surface and this is the most consequential lifecycle fact
+    for a consumer. The reference is served from the old host api.sitejabber.com, and the same
+    content is served from api.smartcustomer.com; the servers block and every code sample in the
+    reference use api.smartcustomer.com. The first-party packages, their namespaces (Sitejabber\Utils,
+    `sitejabber` python module) and their published support address (support@sitejabber.com) all
+    still carry the old brand. No migration notice, no dual-brand deprecation date, and no statement
+    about how long api.sitejabber.com will keep answering.
+  observed: '2026-08-13'
+maintenance_signals:
+  docs_repo_last_push: '2026-07-23'
+  newest_official_package_release: '2020-04-03'
+  note: >-
+    The documentation is actively maintained (docs repo pushed within the last month) while every
+    first-party library is five years stale. The docs are alive; the SDKs are not.
+undocumented_surfaces:
+  note: >-
+    The business web app preconnects to two hosts that are NOT part of the documented API and are NOT
+    recorded as APIs in apis.yml. Noted here so a later pass does not mistake them for a public
+    contract. SmartCustomer's own llms.txt explicitly instructs agents not to treat internal API
+    routes as public documentation, and that instruction is honored here.
+  observed:
+  - host: https://api.smartcustomer.com/v2
+    seen_in: preconnect hint on https://www.smartcustomer.com/business/pricing
+    probed_status: 200
+    probed_body: the same Slate API Reference HTML shell the catch-all serves for every path
+    assessment: >-
+      An internal v2 used by the business web app. It is undocumented — the public reference at
+      api.sitejabber.com documents v1 only, and describes no v2. Its existence is the notable
+      finding: v1 is the only version a developer can read, while the vendor's own front end has
+      already moved on.
+  - host: https://strapi-business.smartcustomer.com/api
+    seen_in: preconnect hint on https://www.smartcustomer.com/business/pricing
+    probed_status: 404
+    probed_body: '{"data":null,"error":{"status":404,"name":"NotFoundError",...}}'
+    assessment: >-
+      A Strapi CMS instance serving marketing/content data to the business site. The 404 is a genuine
+      Strapi error response, confirming the stack, but no collection is public and no
+      /documentation or openapi.json is exposed. Content infrastructure, not a product API.

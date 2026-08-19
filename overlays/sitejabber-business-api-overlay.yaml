@@ -1,0 +1,74 @@
+# generated: '2026-08-13'
+# method: generated
+# source: openapi/sitejabber-business-api-openapi.yml (API Evangelist enhancements over the transcribed spec)
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the SmartCustomer (Sitejabber) Business API
+  version: 1.0.0
+extends: ./../openapi/sitejabber-business-api-openapi.yml
+actions:
+- target: $.info
+  description: Record that no provider-published machine-readable contract exists and where this one came from.
+  update:
+    x-apievangelist-provenance:
+      transcribed-from: https://api.sitejabber.com/
+      docs-source-repo: https://github.com/smartcustomer-reviews/business-api-docs
+      provider-publishes-openapi: false
+      transcribed: '2026-08-13'
+- target: $
+  description: Record the API-wide runtime semantics an agent needs but the spec cannot express.
+  update:
+    x-rate-limits:
+      per_user_token_hour: 1000
+      per_user_token_10s: 10
+      status: 429
+      headers_published: false
+    x-error-envelope:
+      note: >-
+        Application errors return HTTP 200 with success=false. Check the body, not the status.
+        Body errorCode values 401/403/404/429/503 are application codes, unrelated to the HTTP
+        statuses of the same number.
+      catalog: ./../errors/sitejabber-problem-types.yml
+    x-idempotency:
+      supported: false
+      warning: >-
+        Review-request operations send email/SMS to real customers and expose no idempotency key.
+        A blind retry after a timeout can re-contact the customer.
+- target: $.paths['/businesses/{business}/privacy/access'].get
+  description: Flag the CCPA data-subject access operation as high-sensitivity for agent gating.
+  update:
+    x-sensitivity: high
+    x-pii: true
+    x-agent-guidance: >-
+      Returns categorized personal information about a named customer. Requires explicit human
+      authorization before an agent invokes it.
+- target: $.paths['/businesses/{business}/privacy/remove'].post
+  description: Flag the CCPA deletion operation as destructive and irreversible.
+  update:
+    x-sensitivity: high
+    x-pii: true
+    x-destructive: true
+    x-agent-guidance: >-
+      Permanently deletes a customer's information. Irreversible. Must not be invoked by an
+      autonomous agent without a human confirmation step.
+- target: $.paths['/businesses/{business}/review/request/add'].post
+  description: Flag outbound customer contact.
+  update:
+    x-outbound-contact: true
+    x-agent-guidance: >-
+      Sends a review-request email or SMS to a real customer. No idempotency key exists, so do not
+      retry on timeout without first checking whether the request landed.
+- target: $.paths['/businesses/{business}/product/review/request/add'].post
+  description: Flag outbound customer contact.
+  update:
+    x-outbound-contact: true
+    x-agent-guidance: >-
+      Sends product-review request emails to a real customer. No idempotency key exists.
+- target: $.paths['/businesses/{business}/message/send'].post
+  description: Flag outbound contact with a reviewer.
+  update:
+    x-outbound-contact: true
+- target: $.paths['/businesses/{business}/resolution/send'].post
+  description: Flag outbound contact with a reviewer.
+  update:
+    x-outbound-contact: true

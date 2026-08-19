@@ -1,0 +1,69 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.smartcustomer.com/business/pricing
+note: >-
+  SmartCustomer publishes four named packages and a full feature-comparison matrix, but publishes NO
+  prices — every tier is a "Get started" contact-sales flow. The only published numeric quota is the
+  monthly review-request allocation. API access is a feature row on the matrix rather than a separately
+  priced product; the matrix does not state which tiers include it in machine-readable form, so that is
+  not asserted here. Add-ons are listed without prices.
+currency: null
+prices_published: false
+plans:
+- name: Liftoff
+  price: null
+  currency: null
+  billing_period: null
+  quota:
+    review_requests_per_month: 500
+  includes:
+  - two user licenses
+  - live session with an implementation specialist
+  - complimentary concierge onboarding
+  overage: contact sales for additional volume
+  note: "\"Basic review sourcing capabilities for the budget-minded\". No price published."
+- name: Accelerate
+  price: null
+  currency: null
+  billing_period: null
+  quota:
+    review_requests_per_month: 1000
+  includes:
+  - everything in Liftoff
+  - Review Aggregation
+  - two concurrent platforms for Reviewer Distribution
+  overage: contact sales for additional volume
+  note: "\"All the essentials for company reviews at lower volumes\" — marked MOST POPULAR. No price published."
+- name: Ascend
+  price: null
+  currency: null
+  billing_period: null
+  quota:
+    review_requests_per_month: 2000
+  includes:
+  - everything in Accelerate
+  - Analytics
+  - Competitive Intelligence (two competitors)
+  overage: contact sales for additional volume
+  note: "\"The full suite of review management tools - best for most businesses\". No price published."
+- name: Custom
+  price: null
+  currency: null
+  billing_period: null
+  quota:
+    review_requests_per_month: unlimited
+  includes:
+  - all features
+  overage: null
+  note: "\"Perfect for high-volume product review environments\". Enterprise contact-us only."
+add_ons:
+- name: In-person Reviews
+  price: null
+  note: Tablet-based, SMS-based and QR-code-based collection.
+- name: Customer Service Moderation
+  price: null
+  note: Automated Responses and Zendesk Integration.
+- name: Product Reviews
+  price: null
+  note: Sold as an add-on or standalone. Includes review sourcing, product page widgets, product Q&A, product photos, Google PLA integration.
+plan_count: 4

@@ -1,0 +1,134 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sitejabber.com/ (Errors section of the published SmartCustomer API reference)
+docs: https://api.sitejabber.com/
+format: proprietary
+note: >-
+  Not RFC 9457. SmartCustomer returns a flat JSON envelope on every call — status, success and, when
+  status is ERROR, errorCode and errorReason. The numeric codes are the provider's own namespace and
+  deliberately overlap HTTP status numbers (401/403/404/429/503 appear as APPLICATION codes with
+  meanings unrelated to the HTTP statuses of the same number), which is the single most important
+  thing for an agent to know here: a body errorCode of 404 means "can vote only once every 24 hours",
+  not "not found". Titles are copied verbatim from the reference; remediation is derived from the
+  documented behavior of the call that raises each code.
+envelope:
+  media_type: application/json
+  fields:
+    status: OK if everything went good, ERROR if there was an error processing the request
+    success: true or false
+    errorCode: Error code, only present when status is ERROR
+    errorReason: Error message, only present when status is ERROR
+problem_types:
+- code: 101
+  title: Client token invalid
+  family: authentication
+  remediation: Check the client_token query parameter against the key issued to the business.
+- code: 102
+  title: Client token access revoked
+  family: authentication
+  remediation: The API key has been revoked. Contact SmartCustomer support; retrying will not help.
+- code: 201
+  title: Email or password invalid
+  family: authentication
+  remediation: Credentials rejected by POST /login.
+- code: 202
+  title: User access has been disabled
+  family: authorization
+  remediation: Account disabled. Contact SmartCustomer support.
+- code: 203
+  title: User token missing or invalid
+  family: authentication
+  remediation: Send the user_token header returned by POST /login on every non-login call.
+- code: 204
+  title: User session is invalid
+  family: authentication
+  remediation: Re-authenticate with POST /login. Note that calling login invalidates any previous token.
+- code: 205
+  title: Fatal error creating user access
+  family: server
+  remediation: Retry; if persistent, contact support.
+- code: 206
+  title: User access is invalid
+  family: authorization
+  remediation: The token does not grant access to this business.
+- code: 207
+  title: User token is expired
+  family: authentication
+  remediation: Tokens typically last six months. Re-run POST /login and replace the stored token.
+- code: 301
+  title: Business not available
+  family: not-found
+  remediation: Check the {business} path segment — it is the display address (domain without scheme).
+- code: 302
+  title: Missing parameter
+  family: request
+  remediation: A required query or form parameter was omitted.
+- code: 303
+  title: Limit exceeded
+  family: request
+  remediation: A count/paging parameter exceeded its documented maximum (100 for list calls).
+- code: 304
+  title: Email already exists
+  family: conflict
+  remediation: Raised on request-creation calls when the customer email is already on file.
+- code: 305
+  title: The review does not exist
+  family: not-found
+  remediation: Check review_no.
+- code: 306
+  title: Malformed parameter
+  family: request
+  remediation: Check formats — dates are yyyy-mm-dd (hh:mm:ss optional), ranges are "[min],[max]".
+- code: 307
+  title: User not found
+  family: not-found
+  remediation: Check the username on messaging and resolution calls.
+- code: 308
+  title: Insufficient permissions
+  family: authorization
+  remediation: The authenticated user cannot perform this action for this business.
+- code: 309
+  title: Review request removal error
+  family: request
+  remediation: Raised by POST /businesses/{business}/review/request/remove.
+- code: 310
+  title: Product review request removal error
+  family: request
+  remediation: Raised by POST /businesses/{business}/product/review/request/remove.
+- code: 311
+  title: Error uploading image
+  family: request
+  remediation: Raised when image binary or image URL upload fails on product image / product review calls.
+- code: 399
+  title: Unexpected error
+  family: server
+  remediation: Catch-all. Retry with backoff, then contact support.
+- code: 401
+  title: Product does not exist
+  family: not-found
+  remediation: Application code, NOT HTTP 401. Check sku or product_id.
+- code: 402
+  title: Image does not exist
+  family: not-found
+  remediation: Application code, NOT HTTP 402.
+- code: 403
+  title: Product review does not exist
+  family: not-found
+  remediation: Application code, NOT HTTP 403. Check review_id.
+- code: 404
+  title: Can vote only once every 24 hours
+  family: rate-limit
+  remediation: >-
+    Application code, NOT HTTP 404. POST /businesses/{business}/product/reviews/vote enforces a
+    24-hour per-voter cooldown.
+- code: 429
+  title: Rate limit, too many requests
+  family: rate-limit
+  remediation: >-
+    Back off. 1000 calls/hour per user token and no more than 10 calls in any 10 second window.
+    No Retry-After header is published.
+- code: 503
+  title: Site under scheduled maintenance
+  family: availability
+  remediation: Planned maintenance. Retry later.
+error_count: 27

@@ -1,0 +1,69 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sitejabber.com/ (Authentication section of the published SmartCustomer API reference)
+docs: https://api.sitejabber.com/
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+  - query
+  oauth2: false
+  openid_connect: false
+  mutual_tls: false
+  note: >-
+    Two-part credential, both parts required on every call except login. The client_token API key
+    identifies the business and travels in the QUERY STRING — it will therefore appear in server
+    logs, proxy logs and browser history, which is the notable weakness of this scheme. The
+    user_token is a session token in a request header, obtained by exchanging account credentials
+    at POST /login. There is no OAuth, no OIDC and no scope system: authorization is all-or-nothing
+    per business, enforced server-side (error 308 "Insufficient permissions").
+schemes:
+- name: client_token
+  type: apiKey
+  in: query
+  parameter: client_token
+  description: API key issued to the business, passed as a query parameter on every request.
+  required: true
+  rotation: not documented
+  sources:
+  - openapi/sitejabber-business-api-openapi.yml
+  - https://api.sitejabber.com/
+- name: user_token
+  type: apiKey
+  in: header
+  parameter: user_token
+  description: >-
+    User session token returned by POST /login. Typically expires after 6 months; calling login
+    invalidates any previous user token, so concurrent clients sharing one account will evict each
+    other.
+  required: true
+  required_except:
+  - login
+  expiry: "~6 months; the login response carries an explicit expire timestamp"
+  sources:
+  - openapi/sitejabber-business-api-openapi.yml
+  - https://api.sitejabber.com/
+flows:
+- name: token exchange
+  steps:
+  - "POST https://api.smartcustomer.com/v1/login?client_token={apiKey} with form fields email and password"
+  - "Read token and expire from the Login object in the response"
+  - "Send the returned token as a user_token request header on every subsequent call, alongside the client_token query parameter"
+  failure_codes:
+  - 101 Client token invalid
+  - 102 Client token access revoked
+  - 201 Email or password invalid
+  - 203 User token missing or invalid
+  - 204 User session is invalid
+  - 207 User token is expired
+credential_provisioning:
+  url: https://biz.smartcustomer.com/account
+  note: >-
+    The provider's own payload-encryption libraries (packages/) instruct developers to "get your
+    credentials on biz.sitejabber.com/account" — now biz.smartcustomer.com. Credentials are issued
+    behind the business login; there is no self-serve public developer signup.
+separate_encryption_key: >-
+  A distinct CLIENT_ENCRYPTION_KEY (separate from the API client_token) is used by the first-party
+  php-utils/python-utils/java-utils libraries to AES-encrypt a customer payload for the hosted
+  feedback-link flow. It is not an API credential and is not used by the REST API.

@@ -1,0 +1,50 @@
+generated: '2026-08-13'
+method: generated
+source: openapi/sitejabber-business-api-openapi.yml + https://api.sitejabber.com/
+api: SmartCustomer (Sitejabber) Business API
+note: >-
+  Packaged Agent Skills for the marquee flows of the SmartCustomer Business API. Every operationId
+  referenced is grounded in the transcribed OpenAPI; no operation is invented. The two Privacy
+  operations and every outbound-messaging operation carry explicit human-authorization guardrails,
+  because this API can email and text real customers and can permanently delete their records.
+skills:
+- name: sitejabber-monitor-and-respond-to-reviews
+  file: sitejabber-monitor-and-respond-to-reviews.md
+  description: Pull new reviews for a business, triage them, and reply publicly or privately.
+  operations:
+  - getBusiness
+  - getBusinessReviews
+  - getBusinessReview
+  - addReviewComment
+  - sendResolutionMessage
+  - flagReview
+- name: sitejabber-request-reviews-after-purchase
+  file: sitejabber-request-reviews-after-purchase.md
+  description: Ask a customer for a company or product review after an order, and cancel outstanding requests.
+  operations:
+  - createReviewRequest
+  - removeReviewRequest
+  - createProductReviewRequest
+  - removeProductReviewRequest
+  - getWriteReviewLink
+  sensitivity: outbound-contact
+- name: sitejabber-sync-product-catalog-and-reviews
+  file: sitejabber-sync-product-catalog-and-reviews.md
+  description: Keep a product catalog in sync and pull product reviews, Q&A and rating stats.
+  operations:
+  - getProducts
+  - addProduct
+  - removeProduct
+  - addProductImage
+  - getProductReviews
+  - getProductReviewsStats
+  - getTopRatedProduct
+  - getProductQuestions
+- name: sitejabber-handle-privacy-requests
+  file: sitejabber-handle-privacy-requests.md
+  description: Fulfil a CCPA/GDPR data-subject access or deletion request.
+  operations:
+  - accessCustomerInformation
+  - removeCustomerInformation
+  sensitivity: high-pii-destructive
+skill_count: 4

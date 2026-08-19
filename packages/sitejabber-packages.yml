@@ -1,0 +1,72 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://packagist.org/packages/sitejabber/php-utils, https://pypi.org/project/sitejabber-utils/,
+  https://github.com/smartcustomer-reviews (the provider's own GitHub organization), and
+  https://rubygems.org/gems/sitejabber
+note: >-
+  SmartCustomer/Sitejabber publishes no full API client SDK. What it publishes is a set of small
+  first-party "utils" libraries that encrypt the customer payload used to build a feedback/review
+  link — one each for PHP, Python and Java — from the smartcustomer-reviews GitHub organization.
+  Two of the three are on a registry; the Java one is source-only. All three are stale: the newest
+  registry release is from 2020, against an API reference that is still being updated (the
+  business-api-docs repo was last pushed 2026-07-23). That gap is the finding.
+packages:
+- language: php
+  registry: packagist
+  name: sitejabber/php-utils
+  url: https://packagist.org/packages/sitejabber/php-utils
+  repository: https://github.com/smartcustomer-reviews/php-utils
+  install: composer require sitejabber/php-utils
+  official: true
+  version: v1.0.0
+  published: '2020-04-03'
+  scope: payload-encryption
+  description: Library for user's payload encryption used with Sitejabber (feedback link generation).
+  note: >-
+    Only release. Repo was last pushed 2026-05-15, so the source moved but nothing was published to
+    Packagist after 2020.
+- language: python
+  registry: pypi
+  name: sitejabber-utils
+  url: https://pypi.org/project/sitejabber-utils/
+  repository: https://github.com/smartcustomer-reviews/python-utils
+  install: pip install sitejabber-utils
+  official: true
+  version: 1.0.1
+  published: '2020-04-03'
+  scope: payload-encryption
+  description: Library for user's payload encryption used with Sitejabber (feedback link generation).
+  note: Author "Sitejabber", support@sitejabber.com. Two releases (1.0.0, 1.0.1), both April 2020.
+- language: java
+  registry: null
+  name: java-utils
+  url: https://github.com/smartcustomer-reviews/java-utils
+  repository: https://github.com/smartcustomer-reviews/java-utils
+  install: null
+  official: true
+  version: null
+  published: null
+  scope: payload-encryption
+  description: Java equivalent of the payload-encryption utils. Two source files, no build or package.
+  note: >-
+    Source-only — no Maven Central coordinates, no build file, so there is no registry metadata
+    endpoint to query. version/published recorded as null: checked, nothing to record. Repo last
+    pushed 2020-10-06.
+- language: ruby
+  registry: rubygems
+  name: sitejabber
+  url: https://rubygems.org/gems/sitejabber
+  repository: https://github.com/Goldbely/sitejabber-ruby
+  install: gem install sitejabber
+  official: false
+  version: 0.1.0
+  published: '2019-12-09'
+  scope: api-client
+  description: "Basic Sitejabber API integration."
+  note: >-
+    Third party. Authored by Federico Moretti under the Goldbely GitHub account, not by SmartCustomer.
+    Listed for completeness and explicitly NOT counted as a first-party SDK.
+official_count: 3
+third_party_count: 1
+newest_official_release: '2020-04-03'
