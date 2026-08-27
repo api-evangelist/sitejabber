@@ -79,29 +79,16 @@ tags_raw:
 - Ratings
 - Privacy
 apis:
-- name: SmartCustomer (Sitejabber) Business API
-  description: >-
-    The SmartCustomer Business API (published under the pre-rebrand Sitejabber name at
-    api.sitejabber.com) is the review-management API behind SmartCustomer's business product. It
-    covers business profile and ratings lookup (single and bulk), business Q&A, consumer reviews
-    (read, search by keyword/label/date, publish an unpublished review, flag a review), review
-    comments, resolution attempts and direct messaging with reviewers, review requests by email or
-    SMS, partner write/edit review links, a full product-reviews surface (catalog CRUD, product Q&A,
-    product reviews with photos, votes, top-rated, aggregate stats, product review requests), and two
-    CCPA-shaped privacy operations that let a business access or remove a customer's information.
-    Authentication is two-part: a client_token API key on every request plus a user_token session
-    header obtained from POST /login.
+- aid: sitejabber:sitejabber-authentication-api
+  name: SiteJabber Authentication API
+  description: The Authentication API from SiteJabber — 1 operation(s) for authentication.
   humanURL: https://api.sitejabber.com/
   baseURL: https://api.smartcustomer.com/v1
   tags:
-  - Reviews
-  - Consumer Reviews
-  - Reputation Management
-  - Product Reviews
-  - Reviews Management
+  - Authentication
   properties:
   - type: OpenAPI
-    url: openapi/sitejabber-business-api-openapi.yml
+    url: openapi/sitejabber-authentication-api-openapi.yml
   - type: Documentation
     url: https://api.sitejabber.com/
   - type: APIReference
@@ -116,16 +103,329 @@ apis:
     url: conventions/sitejabber-conventions.yml
   - type: DataModel
     url: data-model/sitejabber-data-model.yml
-  - type: Overlay
-    url: overlays/sitejabber-business-api-overlay.yaml
-  - type: MCPServer
-    url: mcp/sitejabber-mcp.yml
+- aid: sitejabber:sitejabber-business-info-api
+  name: SiteJabber Business Info API
+  description: The Business Info API from SiteJabber — 2 operation(s) for business info.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Business Info
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-business-info-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-business-questions-api
+  name: SiteJabber Business Questions API
+  description: The Business Questions API from SiteJabber — 1 operation(s) for business questions.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Business Questions
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-business-questions-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-messages-api
+  name: SiteJabber Messages API
+  description: The Messages API from SiteJabber — 2 operation(s) for messages.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Messages
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-messages-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-partners-api
+  name: SiteJabber Partners API
+  description: The Partners API from SiteJabber — 2 operation(s) for partners.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Partners
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-partners-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-privacy-api
+  name: SiteJabber Privacy API
+  description: The Privacy API from SiteJabber — 2 operation(s) for privacy.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Privacy
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-privacy-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-product-questions-api
+  name: SiteJabber Product Questions API
+  description: The Product Questions API from SiteJabber — 1 operation(s) for product questions.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Product Questions
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-product-questions-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-product-review-requests-api
+  name: SiteJabber Product Review Requests API
+  description: >-
+    The Product Review Requests API from SiteJabber — 2 operation(s) for product review requests.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Product Review Requests
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-product-review-requests-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-product-reviews-api
+  name: SiteJabber Product Reviews API
+  description: The Product Reviews API from SiteJabber — 5 operation(s) for product reviews.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Product Reviews
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-product-reviews-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-products-api
+  name: SiteJabber Products API
+  description: The Products API from SiteJabber — 4 operation(s) for products.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Products
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-products-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-resolution-attempts-api
+  name: SiteJabber Resolution Attempts API
+  description: The Resolution Attempts API from SiteJabber — 1 operation(s) for resolution attempts.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Resolution Attempts
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-resolution-attempts-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-review-comments-api
+  name: SiteJabber Review Comments API
+  description: The Review Comments API from SiteJabber — 2 operation(s) for review comments.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Review Comments
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-review-comments-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-review-requests-api
+  name: SiteJabber Review Requests API
+  description: The Review Requests API from SiteJabber — 2 operation(s) for review requests.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Review Requests
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-review-requests-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
+- aid: sitejabber:sitejabber-reviews-api
+  name: SiteJabber Reviews API
+  description: The Reviews API from SiteJabber — 4 operation(s) for reviews.
+  humanURL: https://api.sitejabber.com/
+  baseURL: https://api.smartcustomer.com/v1
+  tags:
+  - Reviews
+  properties:
+  - type: OpenAPI
+    url: openapi/sitejabber-reviews-api-openapi.yml
+  - type: Documentation
+    url: https://api.sitejabber.com/
+  - type: APIReference
+    url: https://api.sitejabber.com/
+  - type: Authentication
+    url: authentication/sitejabber-authentication.yml
+  - type: RateLimits
+    url: rate-limits/sitejabber-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/sitejabber-problem-types.yml
+  - type: Conventions
+    url: conventions/sitejabber-conventions.yml
+  - type: DataModel
+    url: data-model/sitejabber-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/sitejabber-business-api-overlay.yaml
+- type: MCPServer
+  url: mcp/sitejabber-mcp.yml
 - type: DomainSecurity
   url: security/sitejabber-domain-security.yml
 - type: Website
