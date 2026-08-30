@@ -1,0 +1,164 @@
+openapi: 3.2.0
+info:
+  title: SmartCustomer (Sitejabber) Business Product Review Requests API
+  version: v1
+  summary: Business review, product review, review request, messaging and privacy API for SmartCustomer (formerly Sitejabber).
+  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs). SmartCustomer does not publish an OpenAPI definition; every path, parameter, default, enum and schema field below is copied from the provider''s published reference tables. Where the reference names an object but publishes no field table (ProductCategory, ProductAttribute) the schema is left open rather than invented. Response wrappers are modelled from the published example payloads and the documented status/success envelope.
+
+
+    Authentication is two-part: a client_token (API key) passed as a query parameter on every call, plus a user_token request header obtained from POST /login.'
+  contact:
+    name: SmartCustomer API Support
+    email: support@smartcustomer.com
+    url: https://api.sitejabber.com/
+  termsOfService: https://www.smartcustomer.com/terms
+  x-transcribed-by: API Evangelist enrichment pipeline
+  x-transcription-source: https://api.sitejabber.com/
+servers:
+- url: https://api.smartcustomer.com/v1
+  description: Production. The same reference is also served from https://api.sitejabber.com/ under the pre-rebrand Sitejabber name.
+security:
+- client_token: []
+  user_token: []
+tags:
+- name: Product Review Requests
+paths:
+  /businesses/{business}/product/review/request/add:
+    post:
+      operationId: createProductReviewRequest
+      summary: Create product review request
+      tags:
+      - Product Review Requests
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email of the customer
+                product_skus:
+                  type: string
+                  description: product SKUs of the purchase (comma separated)
+                order_id:
+                  type: string
+                  description: order id of the purchase
+                order_date:
+                  type: string
+                  description: order date of the purchase in yyyy-mm-dd format
+                first_name:
+                  type: string
+                  description: first name of the customer
+                last_name:
+                  type: string
+                  description: last name of the customer
+                location:
+                  type: string
+                  description: business location identifier
+                language:
+                  type: string
+                  description: language for the request
+                return_link:
+                  type: integer
+                  description: (1 => true, 0 => false), if true, returns the link to complete the products review, and does not send the products review request emails
+              required:
+              - email
+              - product_skus
+              - order_id
+              - order_date
+  /businesses/{business}/product/review/request/remove:
+    post:
+      operationId: removeProductReviewRequest
+      summary: Remove product review request
+      tags:
+      - Product Review Requests
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: email of the customer
+                product_sku:
+                  type: string
+                  description: product sku of the purchase, if not specified all request for the given email will be removed
+                order_id:
+                  type: string
+                  description: order id of the purchase, if not specified all requests for the given email will be removed
+              required:
+              - email
+components:
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
+  schemas:
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
+  parameters:
+    business:
+      name: business
+      in: path
+      required: true
+      description: The business's display address (domain without scheme), e.g. yourdomain.com
+      schema:
+        type: string
+      example: yourdomain.com
+  securitySchemes:
+    client_token:
+      type: apiKey
+      in: query
+      name: client_token
+      description: API key issued to the business, passed as a query parameter on every request.
+    user_token:
+      type: apiKey
+      in: header
+      name: user_token
+      description: User session token returned by POST /login. Typically expires after 6 months; calling login invalidates any previous token.
+externalDocs:
+  description: SmartCustomer API reference
+  url: https://api.sitejabber.com/

@@ -1,0 +1,246 @@
+openapi: 3.2.0
+info:
+  title: SmartCustomer (Sitejabber) Business Business Info API
+  version: v1
+  summary: Business review, product review, review request, messaging and privacy API for SmartCustomer (formerly Sitejabber).
+  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs). SmartCustomer does not publish an OpenAPI definition; every path, parameter, default, enum and schema field below is copied from the provider''s published reference tables. Where the reference names an object but publishes no field table (ProductCategory, ProductAttribute) the schema is left open rather than invented. Response wrappers are modelled from the published example payloads and the documented status/success envelope.
+
+
+    Authentication is two-part: a client_token (API key) passed as a query parameter on every call, plus a user_token request header obtained from POST /login.'
+  contact:
+    name: SmartCustomer API Support
+    email: support@smartcustomer.com
+    url: https://api.sitejabber.com/
+  termsOfService: https://www.smartcustomer.com/terms
+  x-transcribed-by: API Evangelist enrichment pipeline
+  x-transcription-source: https://api.sitejabber.com/
+servers:
+- url: https://api.smartcustomer.com/v1
+  description: Production. The same reference is also served from https://api.sitejabber.com/ under the pre-rebrand Sitejabber name.
+security:
+- client_token: []
+  user_token: []
+tags:
+- name: Business Info
+paths:
+  /businesses/{business}:
+    get:
+      operationId: getBusiness
+      summary: Get info for a given business
+      tags:
+      - Business Info
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/UrlObjectWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: datasources
+        in: query
+        description: include ratings from specified comma separated data sources (check the data sources section)
+        required: false
+        schema:
+          type: string
+          default: 'false'
+  /businesses/bulk:
+    get:
+      operationId: getBusinessesBulk
+      summary: Get info for several businesses
+      tags:
+      - Business Info
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/UrlListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - name: businesses
+        in: query
+        description: all businesses to be queried encoded and json format
+        required: true
+        schema:
+          type: string
+components:
+  schemas:
+    NumReviews:
+      type: object
+      title: NumReviews Object
+      required:
+      - type
+      - rating
+      properties:
+        type:
+          type: string
+          description: 'Possible values: total, fiveStars, fourStars, threeStars, twoStars, oneStar'
+          enum:
+          - total
+          - fiveStars
+          - fourStars
+          - threeStars
+          - twoStars
+          - oneStar
+        rating:
+          type: integer
+          description: Number of reviews
+    Rating:
+      type: object
+      title: Rating Object
+      required:
+      - type
+      - rating
+      properties:
+        type:
+          type: string
+          description: 'Possible values: overall, service, value, shipping, returns, quality'
+          enum:
+          - overall
+          - service
+          - value
+          - shipping
+          - returns
+          - quality
+        rating:
+          type: number
+          description: Float value between 1 and 5
+          minimum: 1
+          maximum: 5
+    UrlObjectWrapper:
+      type: object
+      properties:
+        url:
+          $ref: '#/components/schemas/Url'
+    Url:
+      type: object
+      title: Url Object
+      required:
+      - name
+      - urlAddress
+      - displayAddress
+      - urlProfilePage
+      - averageRating
+      - numReviews
+      - address
+      properties:
+        name:
+          type: string
+          description: Name of the business
+        urlAddress:
+          type: string
+          description: Url of the site
+        displayAddress:
+          type: string
+          description: Url of the site without http://
+        urlProfilePage:
+          type: string
+          description: Url of the site's profile page
+        averageRating:
+          type: array
+          description: Array of Rating object
+          items:
+            $ref: '#/components/schemas/Rating'
+        numReviews:
+          type: array
+          description: Array of NumReviews object
+          items:
+            $ref: '#/components/schemas/NumReviews'
+        phone:
+          type: string
+          description: Phone of the site
+        email:
+          type: string
+          description: Email of the site
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: Address of the site
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
+    Address:
+      type: object
+      title: Address Object
+      properties:
+        streetAddress:
+          type: string
+          description: Street address
+        streetAddress2:
+          type: string
+          description: Street address second line
+        city:
+          type: string
+          description: City
+        state:
+          type: string
+          description: State
+        postalCode:
+          type: string
+          description: Postal code
+        country:
+          type: string
+          description: Country
+        completeAddress:
+          type: string
+          description: All fields defining the complete address
+    UrlListWrapper:
+      type: object
+      properties:
+        urls:
+          type: array
+          items:
+            $ref: '#/components/schemas/Url'
+  parameters:
+    business:
+      name: business
+      in: path
+      required: true
+      description: The business's display address (domain without scheme), e.g. yourdomain.com
+      schema:
+        type: string
+      example: yourdomain.com
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
+  securitySchemes:
+    client_token:
+      type: apiKey
+      in: query
+      name: client_token
+      description: API key issued to the business, passed as a query parameter on every request.
+    user_token:
+      type: apiKey
+      in: header
+      name: user_token
+      description: User session token returned by POST /login. Typically expires after 6 months; calling login invalidates any previous token.
+externalDocs:
+  description: SmartCustomer API reference
+  url: https://api.sitejabber.com/

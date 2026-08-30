@@ -1,0 +1,400 @@
+openapi: 3.2.0
+info:
+  title: SmartCustomer (Sitejabber) Business Products API
+  version: v1
+  summary: Business review, product review, review request, messaging and privacy API for SmartCustomer (formerly Sitejabber).
+  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs). SmartCustomer does not publish an OpenAPI definition; every path, parameter, default, enum and schema field below is copied from the provider''s published reference tables. Where the reference names an object but publishes no field table (ProductCategory, ProductAttribute) the schema is left open rather than invented. Response wrappers are modelled from the published example payloads and the documented status/success envelope.
+
+
+    Authentication is two-part: a client_token (API key) passed as a query parameter on every call, plus a user_token request header obtained from POST /login.'
+  contact:
+    name: SmartCustomer API Support
+    email: support@smartcustomer.com
+    url: https://api.sitejabber.com/
+  termsOfService: https://www.smartcustomer.com/terms
+  x-transcribed-by: API Evangelist enrichment pipeline
+  x-transcription-source: https://api.sitejabber.com/
+servers:
+- url: https://api.smartcustomer.com/v1
+  description: Production. The same reference is also served from https://api.sitejabber.com/ under the pre-rebrand Sitejabber name.
+security:
+- client_token: []
+  user_token: []
+tags:
+- name: Products
+paths:
+  /businesses/{business}/products:
+    get:
+      operationId: getProducts
+      summary: Get products
+      tags:
+      - Products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/ResponseEnvelope'
+                - $ref: '#/components/schemas/ProductListWrapper'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      - name: start
+        in: query
+        description: starting offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - name: count
+        in: query
+        description: number of products to be included (max 100)
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - name: q
+        in: query
+        description: retrieve products matching given keyword
+        required: false
+        schema:
+          type: string
+      - name: sku
+        in: query
+        description: retrieve the given product by sku
+        required: false
+        schema:
+          type: string
+      - name: gtin
+        in: query
+        description: retrieve the given product by gtin
+        required: false
+        schema:
+          type: string
+      - name: mpn
+        in: query
+        description: retrieve the given product by mpn
+        required: false
+        schema:
+          type: string
+      - name: brand
+        in: query
+        description: retrieve products matching brand
+        required: false
+        schema:
+          type: string
+      - name: categories
+        in: query
+        description: retrieve products in the given categories
+        required: false
+        schema:
+          type: string
+      - name: price_range
+        in: query
+        description: retrieve products in the given prices [min],[max]
+        required: false
+        schema:
+          type: string
+      - name: reviews_range
+        in: query
+        description: retrieve products with the given number of reviews [min],[max]
+        required: false
+        schema:
+          type: string
+      - name: product_id
+        in: query
+        description: retrieve the given product ID
+        required: false
+        schema:
+          type: integer
+  /businesses/{business}/products/add:
+    post:
+      operationId: addProduct
+      summary: Add product
+      tags:
+      - Products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sku:
+                  type: string
+                  description: product sku
+                item_group:
+                  type: string
+                  description: product item group
+                gtin:
+                  type: string
+                  description: product gtin
+                mpn:
+                  type: string
+                  description: product mpn
+                title:
+                  type: string
+                  description: product title
+                description:
+                  type: string
+                  description: product description
+                brand:
+                  type: string
+                  description: product brand
+                categories:
+                  type: string
+                  description: categories this product belongs to, comma separated
+                currency:
+                  type: string
+                  description: product currency
+                price:
+                  type: number
+                  description: product price
+                retail_price:
+                  type: number
+                  description: product retail price
+                product_link:
+                  type: string
+                  description: product link
+                image_url:
+                  type: string
+                  description: product image url
+                attributes:
+                  type: string
+                  description: custom attributes for the product
+              required:
+              - sku
+              - title
+  /businesses/{business}/products/remove:
+    post:
+      operationId: removeProduct
+      summary: Remove product
+      tags:
+      - Products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+                  description: product ID
+              required:
+              - product_id
+  /businesses/{business}/product/images/add:
+    post:
+      operationId: addProductImage
+      summary: Add product image
+      tags:
+      - Products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEnvelope'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+      parameters:
+      - $ref: '#/components/parameters/business'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sku:
+                  type: string
+                  description: product sku
+                image:
+                  type: string
+                  description: image url
+              required:
+              - sku
+              - image
+components:
+  schemas:
+    ProductAttribute:
+      type: object
+      title: ProductAttribute Object
+      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
+      additionalProperties: true
+    ProductListWrapper:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    ProductImage:
+      type: object
+      title: ProductImage Object
+      properties:
+        caption:
+          type: string
+          description: Caption of the image
+        original:
+          type: string
+          description: Url of the image original size
+        normal:
+          type: string
+          description: Url of the image normal size, max width 600px
+        large:
+          type: string
+          description: Url of the image thumbnail large size 160x160
+        small:
+          type: string
+          description: Url of the image thumbnail small size 96x96
+        created:
+          type: string
+          description: Creation date of the image
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
+    Product:
+      type: object
+      title: Product Object
+      properties:
+        id:
+          type: integer
+          description: Internal product ID
+        sku:
+          type: string
+          description: SKU of the product
+        item_group:
+          type: string
+          description: Used to group similar products together
+        gtin:
+          type: string
+          description: GTIN of the product
+        mpn:
+          type: string
+          description: MPN of the product
+        brand:
+          type: string
+          description: Brand of the product
+        title:
+          type: string
+          description: Title of the product
+        description:
+          type: string
+          description: Description of the product
+        categories:
+          type: array
+          description: Product categories
+          items:
+            $ref: '#/components/schemas/ProductCategory'
+        price:
+          type: number
+          description: Price of the product
+        retail_price:
+          type: number
+          description: Retail price of the product
+        currency:
+          type: string
+          description: Currency of the product
+        product_link:
+          type: string
+          description: Url link to the product's page
+        images:
+          type: array
+          description: Product images
+          items:
+            $ref: '#/components/schemas/ProductImage'
+        attributes:
+          type: array
+          description: Customer attributes
+          items:
+            $ref: '#/components/schemas/ProductAttribute'
+        num_reviews:
+          type: integer
+          description: Number of product reviews
+        average_rating:
+          type: number
+          description: Average rating of the product reviews
+        created:
+          type: string
+          description: Creation date of the product
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+    ProductCategory:
+      type: object
+      title: ProductCategory Object
+      description: Product category. The reference names this object on Product.categories but does not publish a field table for it.
+      additionalProperties: true
+  parameters:
+    business:
+      name: business
+      in: path
+      required: true
+      description: The business's display address (domain without scheme), e.g. yourdomain.com
+      schema:
+        type: string
+      example: yourdomain.com
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
+  securitySchemes:
+    client_token:
+      type: apiKey
+      in: query
+      name: client_token
+      description: API key issued to the business, passed as a query parameter on every request.
+    user_token:
+      type: apiKey
+      in: header
+      name: user_token
+      description: User session token returned by POST /login. Typically expires after 6 months; calling login invalidates any previous token.
+externalDocs:
+  description: SmartCustomer API reference
+  url: https://api.sitejabber.com/
