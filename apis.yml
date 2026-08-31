@@ -169,6 +169,8 @@ apis:
   humanURL: https://api.sitejabber.com/
   baseURL: https://api.smartcustomer.com/v1
   tags:
+  - Message
+  tags_raw:
   - Messages
   properties:
   - type: OpenAPI
@@ -314,6 +316,8 @@ apis:
   humanURL: https://api.sitejabber.com/
   baseURL: https://api.smartcustomer.com/v1
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
