@@ -3,10 +3,7 @@ info:
   title: SmartCustomer (Sitejabber) Business Messages API
   version: v1
   summary: Business review, product review, review request, messaging and privacy API for SmartCustomer (formerly Sitejabber).
-  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs). SmartCustomer does not publish an OpenAPI definition; every path, parameter, default, enum and schema field below is copied from the provider''s published reference tables. Where the reference names an object but publishes no field table (ProductCategory, ProductAttribute) the schema is left open rather than invented. Response wrappers are modelled from the published example payloads and the documented status/success envelope.
-
-
-    Authentication is two-part: a client_token (API key) passed as a query parameter on every call, plus a user_token request header obtained from POST /login.'
+  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs).'
   contact:
     name: SmartCustomer API Support
     email: support@smartcustomer.com
@@ -155,6 +152,22 @@ components:
         email:
           type: string
           description: Only available for solicited reviews and when the email of the user was provided by the business
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
     Rating:
       type: object
       title: Rating Object
@@ -184,6 +197,32 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Message'
+    ReviewImage:
+      type: object
+      title: ReviewImage Object
+      properties:
+        caption:
+          type: string
+          description: Caption of the image
+        original:
+          type: string
+          description: Url of the image original size
+        normal:
+          type: string
+          description: Url of the image normal size, max width 600px
+        large:
+          type: string
+          description: Url of the image thumbnail large size 160x160
+        small:
+          type: string
+          description: Url of the image thumbnail small size 96x96
+        created:
+          type: string
+          description: Creation date of the image
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+          format: date-time
     Message:
       type: object
       title: Message Object
@@ -212,48 +251,6 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: User who sent the message
-    ResponseEnvelope:
-      type: object
-      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
-      properties:
-        status:
-          type: string
-          description: OK if everything went good, ERROR if there was an error processing the request
-        success:
-          type: boolean
-          description: true or false
-        errorCode:
-          type: integer
-          description: Error code, only present when status is ERROR
-        errorReason:
-          type: string
-          description: Error message, only present when status is ERROR
-    ReviewImage:
-      type: object
-      title: ReviewImage Object
-      properties:
-        caption:
-          type: string
-          description: Caption of the image
-        original:
-          type: string
-          description: Url of the image original size
-        normal:
-          type: string
-          description: Url of the image normal size, max width 600px
-        large:
-          type: string
-          description: Url of the image thumbnail large size 160x160
-        small:
-          type: string
-          description: Url of the image thumbnail small size 96x96
-        created:
-          type: string
-          description: Creation date of the image
-        createdRFC:
-          type: string
-          description: Same as created but in format RFC 3339
-          format: date-time
     Review:
       type: object
       title: Review Object
@@ -337,6 +334,13 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: Author of the review
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   parameters:
     business:
       name: business
@@ -346,13 +350,6 @@ components:
       schema:
         type: string
       example: yourdomain.com
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey

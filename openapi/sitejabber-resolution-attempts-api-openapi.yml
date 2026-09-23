@@ -3,10 +3,7 @@ info:
   title: SmartCustomer (Sitejabber) Business Resolution Attempts API
   version: v1
   summary: Business review, product review, review request, messaging and privacy API for SmartCustomer (formerly Sitejabber).
-  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs). SmartCustomer does not publish an OpenAPI definition; every path, parameter, default, enum and schema field below is copied from the provider''s published reference tables. Where the reference names an object but publishes no field table (ProductCategory, ProductAttribute) the schema is left open rather than invented. Response wrappers are modelled from the published example payloads and the documented status/success envelope.
-
-
-    Authentication is two-part: a client_token (API key) passed as a query parameter on every call, plus a user_token request header obtained from POST /login.'
+  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs).'
   contact:
     name: SmartCustomer API Support
     email: support@smartcustomer.com
@@ -61,6 +58,15 @@ paths:
               - username
               - body
 components:
+  parameters:
+    business:
+      name: business
+      in: path
+      required: true
+      description: The business's display address (domain without scheme), e.g. yourdomain.com
+      schema:
+        type: string
+      example: yourdomain.com
   responses:
     TooManyRequests:
       description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
@@ -85,15 +91,6 @@ components:
         errorReason:
           type: string
           description: Error message, only present when status is ERROR
-  parameters:
-    business:
-      name: business
-      in: path
-      required: true
-      description: The business's display address (domain without scheme), e.g. yourdomain.com
-      schema:
-        type: string
-      example: yourdomain.com
   securitySchemes:
     client_token:
       type: apiKey

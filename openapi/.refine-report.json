@@ -1,0 +1,46 @@
+{
+  "provider": "sitejabber",
+  "sources": [
+    "_original/sitejabber-business-api-openapi.yml"
+  ],
+  "outputs": [
+    "sitejabber-authentication-api-openapi.yml",
+    "sitejabber-business-info-api-openapi.yml",
+    "sitejabber-business-questions-api-openapi.yml",
+    "sitejabber-messages-api-openapi.yml",
+    "sitejabber-partners-api-openapi.yml",
+    "sitejabber-privacy-api-openapi.yml",
+    "sitejabber-product-questions-api-openapi.yml",
+    "sitejabber-product-review-requests-api-openapi.yml",
+    "sitejabber-product-reviews-api-openapi.yml",
+    "sitejabber-products-api-openapi.yml",
+    "sitejabber-resolution-attempts-api-openapi.yml",
+    "sitejabber-review-comments-api-openapi.yml",
+    "sitejabber-review-requests-api-openapi.yml",
+    "sitejabber-reviews-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "sitejabber-business-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "sitejabber-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-business-info-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-business-questions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-messages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-partners-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-privacy-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-product-questions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-product-review-requests-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-product-reviews-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-resolution-attempts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-review-comments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-review-requests-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "sitejabber-reviews-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

@@ -3,10 +3,7 @@ info:
   title: SmartCustomer (Sitejabber) Business Product Questions API
   version: v1
   summary: Business review, product review, review request, messaging and privacy API for SmartCustomer (formerly Sitejabber).
-  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs). SmartCustomer does not publish an OpenAPI definition; every path, parameter, default, enum and schema field below is copied from the provider''s published reference tables. Where the reference names an object but publishes no field table (ProductCategory, ProductAttribute) the schema is left open rather than invented. Response wrappers are modelled from the published example payloads and the documented status/success envelope.
-
-
-    Authentication is two-part: a client_token (API key) passed as a query parameter on every call, plus a user_token request header obtained from POST /login.'
+  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs).'
   contact:
     name: SmartCustomer API Support
     email: support@smartcustomer.com
@@ -77,47 +74,11 @@ paths:
           default: DESC
 components:
   schemas:
-    ProductAttribute:
+    ProductCategory:
       type: object
-      title: ProductAttribute Object
-      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
+      title: ProductCategory Object
+      description: Product category. The reference names this object on Product.categories but does not publish a field table for it.
       additionalProperties: true
-    User:
-      type: object
-      title: User Object
-      required:
-      - username
-      - firstName
-      - lastName
-      - thumbnail
-      - profilePage
-      - numReviews
-      - numHelpfulVotes
-      properties:
-        username:
-          type: string
-          description: Username of the user
-        firstName:
-          type: string
-          description: First name of the user
-        lastName:
-          type: string
-          description: First letter of last name of the user
-        thumbnail:
-          type: string
-          description: Relative path of the user's thumbnail image
-        profilePage:
-          type: string
-          description: Url of the user's profile page
-        numReviews:
-          type: integer
-          description: Number of reviews written by the user
-        numHelpfulVotes:
-          type: integer
-          description: Number of helpful votes received
-        email:
-          type: string
-          description: Only available for solicited reviews and when the email of the user was provided by the business
     ProductQuestion:
       type: object
       title: ProductQuestion Object
@@ -162,89 +123,6 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: Author of the question
-    ProductAnswer:
-      type: object
-      title: ProductAnswer Object
-      properties:
-        id:
-          type: integer
-          description: Internal answer ID
-        content:
-          type: string
-          description: Content of the answer
-        created:
-          type: string
-          description: Creation date of the answer
-        createdRFC:
-          type: string
-          description: Same as created but in format RFC 3339
-        published:
-          type: string
-          description: Publication date of the question
-        publishedRFC:
-          type: string
-          description: Same as published but in format RFC 3339
-        num_votes:
-          type: integer
-          description: Number of votes
-        num_positive_votes:
-          type: integer
-          description: Number of positive votes
-        num_negative_votes:
-          type: integer
-          description: Number of negative votes
-        author:
-          allOf:
-          - $ref: '#/components/schemas/User'
-          description: Author of the answer
-    ProductQuestionListWrapper:
-      type: object
-      properties:
-        questions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProductQuestion'
-    ProductImage:
-      type: object
-      title: ProductImage Object
-      properties:
-        caption:
-          type: string
-          description: Caption of the image
-        original:
-          type: string
-          description: Url of the image original size
-        normal:
-          type: string
-          description: Url of the image normal size, max width 600px
-        large:
-          type: string
-          description: Url of the image thumbnail large size 160x160
-        small:
-          type: string
-          description: Url of the image thumbnail small size 96x96
-        created:
-          type: string
-          description: Creation date of the image
-        createdRFC:
-          type: string
-          description: Same as created but in format RFC 3339
-    ResponseEnvelope:
-      type: object
-      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
-      properties:
-        status:
-          type: string
-          description: OK if everything went good, ERROR if there was an error processing the request
-        success:
-          type: boolean
-          description: true or false
-        errorCode:
-          type: integer
-          description: Error code, only present when status is ERROR
-        errorReason:
-          type: string
-          description: Error message, only present when status is ERROR
     Product:
       type: object
       title: Product Object
@@ -312,11 +190,137 @@ components:
         createdRFC:
           type: string
           description: Same as created but in format RFC 3339
-    ProductCategory:
+    ProductQuestionListWrapper:
       type: object
-      title: ProductCategory Object
-      description: Product category. The reference names this object on Product.categories but does not publish a field table for it.
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductQuestion'
+    ProductAttribute:
+      type: object
+      title: ProductAttribute Object
+      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
       additionalProperties: true
+    ProductAnswer:
+      type: object
+      title: ProductAnswer Object
+      properties:
+        id:
+          type: integer
+          description: Internal answer ID
+        content:
+          type: string
+          description: Content of the answer
+        created:
+          type: string
+          description: Creation date of the answer
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        published:
+          type: string
+          description: Publication date of the question
+        publishedRFC:
+          type: string
+          description: Same as published but in format RFC 3339
+        num_votes:
+          type: integer
+          description: Number of votes
+        num_positive_votes:
+          type: integer
+          description: Number of positive votes
+        num_negative_votes:
+          type: integer
+          description: Number of negative votes
+        author:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the answer
+    User:
+      type: object
+      title: User Object
+      required:
+      - username
+      - firstName
+      - lastName
+      - thumbnail
+      - profilePage
+      - numReviews
+      - numHelpfulVotes
+      properties:
+        username:
+          type: string
+          description: Username of the user
+        firstName:
+          type: string
+          description: First name of the user
+        lastName:
+          type: string
+          description: First letter of last name of the user
+        thumbnail:
+          type: string
+          description: Relative path of the user's thumbnail image
+        profilePage:
+          type: string
+          description: Url of the user's profile page
+        numReviews:
+          type: integer
+          description: Number of reviews written by the user
+        numHelpfulVotes:
+          type: integer
+          description: Number of helpful votes received
+        email:
+          type: string
+          description: Only available for solicited reviews and when the email of the user was provided by the business
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
+    ProductImage:
+      type: object
+      title: ProductImage Object
+      properties:
+        caption:
+          type: string
+          description: Caption of the image
+        original:
+          type: string
+          description: Url of the image original size
+        normal:
+          type: string
+          description: Url of the image normal size, max width 600px
+        large:
+          type: string
+          description: Url of the image thumbnail large size 160x160
+        small:
+          type: string
+          description: Url of the image thumbnail small size 96x96
+        created:
+          type: string
+          description: Creation date of the image
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   parameters:
     business:
       name: business
@@ -326,13 +330,6 @@ components:
       schema:
         type: string
       example: yourdomain.com
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey

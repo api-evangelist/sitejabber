@@ -3,10 +3,7 @@ info:
   title: SmartCustomer (Sitejabber) Business Partners API
   version: v1
   summary: Business review, product review, review request, messaging and privacy API for SmartCustomer (formerly Sitejabber).
-  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs). SmartCustomer does not publish an OpenAPI definition; every path, parameter, default, enum and schema field below is copied from the provider''s published reference tables. Where the reference names an object but publishes no field table (ProductCategory, ProductAttribute) the schema is left open rather than invented. Response wrappers are modelled from the published example payloads and the documented status/success envelope.
-
-
-    Authentication is two-part: a client_token (API key) passed as a query parameter on every call, plus a user_token request header obtained from POST /login.'
+  description: 'Transcribed by API Evangelist from SmartCustomer''s own published API reference at https://api.sitejabber.com/ (Slate source: https://github.com/smartcustomer-reviews/business-api-docs).'
   contact:
     name: SmartCustomer API Support
     email: support@smartcustomer.com
@@ -70,21 +67,7 @@ paths:
         schema:
           type: string
 components:
-  parameters:
-    business:
-      name: business
-      in: path
-      required: true
-      description: The business's display address (domain without scheme), e.g. yourdomain.com
-      schema:
-        type: string
-      example: yourdomain.com
   schemas:
-    PartnerWrapper:
-      type: object
-      properties:
-        partner:
-          $ref: '#/components/schemas/Partner'
     ResponseEnvelope:
       type: object
       description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
@@ -101,6 +84,11 @@ components:
         errorReason:
           type: string
           description: Error message, only present when status is ERROR
+    PartnerWrapper:
+      type: object
+      properties:
+        partner:
+          $ref: '#/components/schemas/Partner'
     Partner:
       type: object
       title: Partner Object
@@ -121,6 +109,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ResponseEnvelope'
+  parameters:
+    business:
+      name: business
+      in: path
+      required: true
+      description: The business's display address (domain without scheme), e.g. yourdomain.com
+      schema:
+        type: string
+      example: yourdomain.com
   securitySchemes:
     client_token:
       type: apiKey
