@@ -85,13 +85,6 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: Author of the answer
-    QuestionListWrapper:
-      type: object
-      properties:
-        questions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Question'
     Question:
       type: object
       title: Question Object
@@ -129,6 +122,29 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: Author of the question
+    QuestionListWrapper:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
     User:
       type: object
       title: User Object
@@ -165,22 +181,6 @@ components:
         email:
           type: string
           description: Only available for solicited reviews and when the email of the user was provided by the business
-    ResponseEnvelope:
-      type: object
-      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
-      properties:
-        status:
-          type: string
-          description: OK if everything went good, ERROR if there was an error processing the request
-        success:
-          type: boolean
-          description: true or false
-        errorCode:
-          type: integer
-          description: Error code, only present when status is ERROR
-        errorReason:
-          type: string
-          description: Error message, only present when status is ERROR
   parameters:
     business:
       name: business

@@ -116,6 +116,105 @@ paths:
               - body
 components:
   schemas:
+    MessageListWrapper:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+    Rating:
+      type: object
+      title: Rating Object
+      required:
+      - type
+      - rating
+      properties:
+        type:
+          type: string
+          description: 'Possible values: overall, service, value, shipping, returns, quality'
+          enum:
+          - overall
+          - service
+          - value
+          - shipping
+          - returns
+          - quality
+        rating:
+          type: number
+          description: Float value between 1 and 5
+          minimum: 1
+          maximum: 5
+    Message:
+      type: object
+      title: Message Object
+      properties:
+        subject:
+          type: string
+          description: Subject of the message
+        body:
+          type: string
+          description: Body of the message
+        review:
+          allOf:
+          - $ref: '#/components/schemas/Review'
+          description: Review this message belongs to, if any
+        created:
+          type: string
+          description: Creation date of the message
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        recipient:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: User who received the message
+        sender:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: User who sent the message
+    ReviewImage:
+      type: object
+      title: ReviewImage Object
+      properties:
+        caption:
+          type: string
+          description: Caption of the image
+        original:
+          type: string
+          description: Url of the image original size
+        normal:
+          type: string
+          description: Url of the image normal size, max width 600px
+        large:
+          type: string
+          description: Url of the image thumbnail large size 160x160
+        small:
+          type: string
+          description: Url of the image thumbnail small size 96x96
+        created:
+          type: string
+          description: Creation date of the image
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+          format: date-time
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
     User:
       type: object
       title: User Object
@@ -152,105 +251,6 @@ components:
         email:
           type: string
           description: Only available for solicited reviews and when the email of the user was provided by the business
-    ResponseEnvelope:
-      type: object
-      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
-      properties:
-        status:
-          type: string
-          description: OK if everything went good, ERROR if there was an error processing the request
-        success:
-          type: boolean
-          description: true or false
-        errorCode:
-          type: integer
-          description: Error code, only present when status is ERROR
-        errorReason:
-          type: string
-          description: Error message, only present when status is ERROR
-    Rating:
-      type: object
-      title: Rating Object
-      required:
-      - type
-      - rating
-      properties:
-        type:
-          type: string
-          description: 'Possible values: overall, service, value, shipping, returns, quality'
-          enum:
-          - overall
-          - service
-          - value
-          - shipping
-          - returns
-          - quality
-        rating:
-          type: number
-          description: Float value between 1 and 5
-          minimum: 1
-          maximum: 5
-    MessageListWrapper:
-      type: object
-      properties:
-        messages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Message'
-    ReviewImage:
-      type: object
-      title: ReviewImage Object
-      properties:
-        caption:
-          type: string
-          description: Caption of the image
-        original:
-          type: string
-          description: Url of the image original size
-        normal:
-          type: string
-          description: Url of the image normal size, max width 600px
-        large:
-          type: string
-          description: Url of the image thumbnail large size 160x160
-        small:
-          type: string
-          description: Url of the image thumbnail small size 96x96
-        created:
-          type: string
-          description: Creation date of the image
-        createdRFC:
-          type: string
-          description: Same as created but in format RFC 3339
-          format: date-time
-    Message:
-      type: object
-      title: Message Object
-      properties:
-        subject:
-          type: string
-          description: Subject of the message
-        body:
-          type: string
-          description: Body of the message
-        review:
-          allOf:
-          - $ref: '#/components/schemas/Review'
-          description: Review this message belongs to, if any
-        created:
-          type: string
-          description: Creation date of the message
-        createdRFC:
-          type: string
-          description: Same as created but in format RFC 3339
-        recipient:
-          allOf:
-          - $ref: '#/components/schemas/User'
-          description: User who received the message
-        sender:
-          allOf:
-          - $ref: '#/components/schemas/User'
-          description: User who sent the message
     Review:
       type: object
       title: Review Object
@@ -334,13 +334,6 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: Author of the review
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
   parameters:
     business:
       name: business
@@ -350,6 +343,13 @@ components:
       schema:
         type: string
       example: yourdomain.com
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey

@@ -126,23 +126,14 @@ paths:
               - review_no
               - text
 components:
-  parameters:
-    business:
-      name: business
-      in: path
-      required: true
-      description: The business's display address (domain without scheme), e.g. yourdomain.com
-      schema:
-        type: string
-      example: yourdomain.com
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
   schemas:
+    CommentListWrapper:
+      type: object
+      properties:
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
     User:
       type: object
       title: User Object
@@ -236,13 +227,22 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: Author of the comment
-    CommentListWrapper:
-      type: object
-      properties:
-        comments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Comment'
+  parameters:
+    business:
+      name: business
+      in: path
+      required: true
+      description: The business's display address (domain without scheme), e.g. yourdomain.com
+      schema:
+        type: string
+      example: yourdomain.com
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey

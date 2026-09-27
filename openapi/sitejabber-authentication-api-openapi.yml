@@ -58,6 +58,36 @@ paths:
       - client_token: []
 components:
   schemas:
+    LoginObject:
+      type: object
+      title: Login Object
+      properties:
+        token:
+          type: string
+          description: Token used in subsequent calls as user identifier
+        expire:
+          type: string
+          description: When the token will expire (typically after 6 months)
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: User logged in into the system
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
     User:
       type: object
       title: User Object
@@ -94,36 +124,6 @@ components:
         email:
           type: string
           description: Only available for solicited reviews and when the email of the user was provided by the business
-    ResponseEnvelope:
-      type: object
-      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
-      properties:
-        status:
-          type: string
-          description: OK if everything went good, ERROR if there was an error processing the request
-        success:
-          type: boolean
-          description: true or false
-        errorCode:
-          type: integer
-          description: Error code, only present when status is ERROR
-        errorReason:
-          type: string
-          description: Error message, only present when status is ERROR
-    LoginObject:
-      type: object
-      title: Login Object
-      properties:
-        token:
-          type: string
-          description: Token used in subsequent calls as user identifier
-        expire:
-          type: string
-          description: When the token will expire (typically after 6 months)
-        user:
-          allOf:
-          - $ref: '#/components/schemas/User'
-          description: User logged in into the system
   responses:
     TooManyRequests:
       description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.

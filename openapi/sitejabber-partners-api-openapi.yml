@@ -68,6 +68,24 @@ paths:
           type: string
 components:
   schemas:
+    Partner:
+      type: object
+      title: Partner Object
+      properties:
+        url:
+          type: string
+          description: Url link to access the requested review page
+        hash:
+          type: string
+          description: Hash identifier for the requested review page
+        expire:
+          type: string
+          description: When the link will expire
+    PartnerWrapper:
+      type: object
+      properties:
+        partner:
+          $ref: '#/components/schemas/Partner'
     ResponseEnvelope:
       type: object
       description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
@@ -84,31 +102,6 @@ components:
         errorReason:
           type: string
           description: Error message, only present when status is ERROR
-    PartnerWrapper:
-      type: object
-      properties:
-        partner:
-          $ref: '#/components/schemas/Partner'
-    Partner:
-      type: object
-      title: Partner Object
-      properties:
-        url:
-          type: string
-          description: Url link to access the requested review page
-        hash:
-          type: string
-          description: Hash identifier for the requested review page
-        expire:
-          type: string
-          description: When the link will expire
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
   parameters:
     business:
       name: business
@@ -118,6 +111,13 @@ components:
       schema:
         type: string
       example: yourdomain.com
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey
