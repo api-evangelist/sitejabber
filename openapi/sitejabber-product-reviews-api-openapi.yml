@@ -311,169 +311,6 @@ paths:
           type: string
 components:
   schemas:
-    ProductImage:
-      type: object
-      title: ProductImage Object
-      properties:
-        caption:
-          type: string
-          description: Caption of the image
-        original:
-          type: string
-          description: Url of the image original size
-        normal:
-          type: string
-          description: Url of the image normal size, max width 600px
-        large:
-          type: string
-          description: Url of the image thumbnail large size 160x160
-        small:
-          type: string
-          description: Url of the image thumbnail small size 96x96
-        created:
-          type: string
-          description: Creation date of the image
-        createdRFC:
-          type: string
-          description: Same as created but in format RFC 3339
-    ProductReviewListWrapper:
-      type: object
-      properties:
-        reviews:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProductReview'
-    ProductListWrapper:
-      type: object
-      properties:
-        products:
-          type: array
-          items:
-            $ref: '#/components/schemas/Product'
-    ProductReview:
-      type: object
-      title: ProductReview Object
-      properties:
-        id:
-          type: integer
-          description: Internal product review ID
-        title:
-          type: string
-          description: Title of the review
-        content:
-          type: string
-          description: Content of the review
-        rating:
-          type: integer
-          description: Rating of the review
-        order_id:
-          type: string
-          description: Order number for the review
-        user:
-          allOf:
-          - $ref: '#/components/schemas/User'
-          description: Author of the review
-        user_location:
-          type: string
-          description: Location of the user
-        attributes:
-          type: array
-          description: Custom attributes
-          items:
-            $ref: '#/components/schemas/ProductAttribute'
-        images:
-          type: array
-          description: Array of customer product images
-          items:
-            $ref: '#/components/schemas/ProductImage'
-        solicited:
-          type: integer
-          description: Defines if the review was solicited or not, values are Yes/No
-        votes:
-          type: integer
-          description: Number of votes
-        num_positive_votes:
-          type: integer
-          description: Number of positive votes
-        num_negative_votes:
-          type: integer
-          description: Number of negative votes
-        published:
-          type: string
-          description: Publication date of the product
-        publishedRFC:
-          type: string
-          description: Same as published but in format RFC 3339
-        created:
-          type: string
-          description: Creation date of the product
-        createdRFC:
-          type: string
-          description: Same as created but in format RFC 3339
-        product:
-          allOf:
-          - $ref: '#/components/schemas/Product'
-          description: Product of the review
-        removedRFC:
-          type: string
-          description: DateTime the product review was removed in format RFC 3339 (only available if the product review is removed)
-    ResponseEnvelope:
-      type: object
-      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
-      properties:
-        status:
-          type: string
-          description: OK if everything went good, ERROR if there was an error processing the request
-        success:
-          type: boolean
-          description: true or false
-        errorCode:
-          type: integer
-          description: Error code, only present when status is ERROR
-        errorReason:
-          type: string
-          description: Error message, only present when status is ERROR
-    User:
-      type: object
-      title: User Object
-      required:
-      - username
-      - firstName
-      - lastName
-      - thumbnail
-      - profilePage
-      - numReviews
-      - numHelpfulVotes
-      properties:
-        username:
-          type: string
-          description: Username of the user
-        firstName:
-          type: string
-          description: First name of the user
-        lastName:
-          type: string
-          description: First letter of last name of the user
-        thumbnail:
-          type: string
-          description: Relative path of the user's thumbnail image
-        profilePage:
-          type: string
-          description: Url of the user's profile page
-        numReviews:
-          type: integer
-          description: Number of reviews written by the user
-        numHelpfulVotes:
-          type: integer
-          description: Number of helpful votes received
-        email:
-          type: string
-          description: Only available for solicited reviews and when the email of the user was provided by the business
-    ProductAttribute:
-      type: object
-      title: ProductAttribute Object
-      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
-      additionalProperties: true
     Product:
       type: object
       title: Product Object
@@ -541,11 +378,174 @@ components:
         createdRFC:
           type: string
           description: Same as created but in format RFC 3339
+    ProductReviewListWrapper:
+      type: object
+      properties:
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductReview'
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
+    ProductAttribute:
+      type: object
+      title: ProductAttribute Object
+      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
+      additionalProperties: true
+    User:
+      type: object
+      title: User Object
+      required:
+      - username
+      - firstName
+      - lastName
+      - thumbnail
+      - profilePage
+      - numReviews
+      - numHelpfulVotes
+      properties:
+        username:
+          type: string
+          description: Username of the user
+        firstName:
+          type: string
+          description: First name of the user
+        lastName:
+          type: string
+          description: First letter of last name of the user
+        thumbnail:
+          type: string
+          description: Relative path of the user's thumbnail image
+        profilePage:
+          type: string
+          description: Url of the user's profile page
+        numReviews:
+          type: integer
+          description: Number of reviews written by the user
+        numHelpfulVotes:
+          type: integer
+          description: Number of helpful votes received
+        email:
+          type: string
+          description: Only available for solicited reviews and when the email of the user was provided by the business
     ProductCategory:
       type: object
       title: ProductCategory Object
       description: Product category. The reference names this object on Product.categories but does not publish a field table for it.
       additionalProperties: true
+    ProductReview:
+      type: object
+      title: ProductReview Object
+      properties:
+        id:
+          type: integer
+          description: Internal product review ID
+        title:
+          type: string
+          description: Title of the review
+        content:
+          type: string
+          description: Content of the review
+        rating:
+          type: integer
+          description: Rating of the review
+        order_id:
+          type: string
+          description: Order number for the review
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the review
+        user_location:
+          type: string
+          description: Location of the user
+        attributes:
+          type: array
+          description: Custom attributes
+          items:
+            $ref: '#/components/schemas/ProductAttribute'
+        images:
+          type: array
+          description: Array of customer product images
+          items:
+            $ref: '#/components/schemas/ProductImage'
+        solicited:
+          type: integer
+          description: Defines if the review was solicited or not, values are Yes/No
+        votes:
+          type: integer
+          description: Number of votes
+        num_positive_votes:
+          type: integer
+          description: Number of positive votes
+        num_negative_votes:
+          type: integer
+          description: Number of negative votes
+        published:
+          type: string
+          description: Publication date of the product
+        publishedRFC:
+          type: string
+          description: Same as published but in format RFC 3339
+        created:
+          type: string
+          description: Creation date of the product
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        product:
+          allOf:
+          - $ref: '#/components/schemas/Product'
+          description: Product of the review
+        removedRFC:
+          type: string
+          description: DateTime the product review was removed in format RFC 3339 (only available if the product review is removed)
+    ProductImage:
+      type: object
+      title: ProductImage Object
+      properties:
+        caption:
+          type: string
+          description: Caption of the image
+        original:
+          type: string
+          description: Url of the image original size
+        normal:
+          type: string
+          description: Url of the image normal size, max width 600px
+        large:
+          type: string
+          description: Url of the image thumbnail large size 160x160
+        small:
+          type: string
+          description: Url of the image thumbnail small size 96x96
+        created:
+          type: string
+          description: Creation date of the image
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+    ProductListWrapper:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
   parameters:
     business:
       name: business

@@ -58,22 +58,6 @@ paths:
               - username
               - body
 components:
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
-  parameters:
-    business:
-      name: business
-      in: path
-      required: true
-      description: The business's display address (domain without scheme), e.g. yourdomain.com
-      schema:
-        type: string
-      example: yourdomain.com
   schemas:
     ResponseEnvelope:
       type: object
@@ -91,6 +75,22 @@ components:
         errorReason:
           type: string
           description: Error message, only present when status is ERROR
+  parameters:
+    business:
+      name: business
+      in: path
+      required: true
+      description: The business's display address (domain without scheme), e.g. yourdomain.com
+      schema:
+        type: string
+      example: yourdomain.com
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey

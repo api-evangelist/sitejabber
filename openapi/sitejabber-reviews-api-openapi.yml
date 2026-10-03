@@ -218,28 +218,6 @@ paths:
                   description: feedback message explaining the reason
 components:
   schemas:
-    Rating:
-      type: object
-      title: Rating Object
-      required:
-      - type
-      - rating
-      properties:
-        type:
-          type: string
-          description: 'Possible values: overall, service, value, shipping, returns, quality'
-          enum:
-          - overall
-          - service
-          - value
-          - shipping
-          - returns
-          - quality
-        rating:
-          type: number
-          description: Float value between 1 and 5
-          minimum: 1
-          maximum: 5
     ReviewImage:
       type: object
       title: ReviewImage Object
@@ -266,70 +244,6 @@ components:
           type: string
           description: Same as created but in format RFC 3339
           format: date-time
-    ReviewWrapper:
-      type: object
-      properties:
-        review:
-          $ref: '#/components/schemas/Review'
-    ResponseEnvelope:
-      type: object
-      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
-      properties:
-        status:
-          type: string
-          description: OK if everything went good, ERROR if there was an error processing the request
-        success:
-          type: boolean
-          description: true or false
-        errorCode:
-          type: integer
-          description: Error code, only present when status is ERROR
-        errorReason:
-          type: string
-          description: Error message, only present when status is ERROR
-    User:
-      type: object
-      title: User Object
-      required:
-      - username
-      - firstName
-      - lastName
-      - thumbnail
-      - profilePage
-      - numReviews
-      - numHelpfulVotes
-      properties:
-        username:
-          type: string
-          description: Username of the user
-        firstName:
-          type: string
-          description: First name of the user
-        lastName:
-          type: string
-          description: First letter of last name of the user
-        thumbnail:
-          type: string
-          description: Relative path of the user's thumbnail image
-        profilePage:
-          type: string
-          description: Url of the user's profile page
-        numReviews:
-          type: integer
-          description: Number of reviews written by the user
-        numHelpfulVotes:
-          type: integer
-          description: Number of helpful votes received
-        email:
-          type: string
-          description: Only available for solicited reviews and when the email of the user was provided by the business
-    ReviewListWrapper:
-      type: object
-      properties:
-        reviews:
-          type: array
-          items:
-            $ref: '#/components/schemas/Review'
     Review:
       type: object
       title: Review Object
@@ -413,6 +327,92 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: Author of the review
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
+    ReviewListWrapper:
+      type: object
+      properties:
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+    User:
+      type: object
+      title: User Object
+      required:
+      - username
+      - firstName
+      - lastName
+      - thumbnail
+      - profilePage
+      - numReviews
+      - numHelpfulVotes
+      properties:
+        username:
+          type: string
+          description: Username of the user
+        firstName:
+          type: string
+          description: First name of the user
+        lastName:
+          type: string
+          description: First letter of last name of the user
+        thumbnail:
+          type: string
+          description: Relative path of the user's thumbnail image
+        profilePage:
+          type: string
+          description: Url of the user's profile page
+        numReviews:
+          type: integer
+          description: Number of reviews written by the user
+        numHelpfulVotes:
+          type: integer
+          description: Number of helpful votes received
+        email:
+          type: string
+          description: Only available for solicited reviews and when the email of the user was provided by the business
+    Rating:
+      type: object
+      title: Rating Object
+      required:
+      - type
+      - rating
+      properties:
+        type:
+          type: string
+          description: 'Possible values: overall, service, value, shipping, returns, quality'
+          enum:
+          - overall
+          - service
+          - value
+          - shipping
+          - returns
+          - quality
+        rating:
+          type: number
+          description: Float value between 1 and 5
+          minimum: 1
+          maximum: 5
+    ReviewWrapper:
+      type: object
+      properties:
+        review:
+          $ref: '#/components/schemas/Review'
   parameters:
     business:
       name: business
