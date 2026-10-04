@@ -240,6 +240,11 @@ paths:
               - image
 components:
   schemas:
+    ProductCategory:
+      type: object
+      title: ProductCategory Object
+      description: Product category. The reference names this object on Product.categories but does not publish a field table for it.
+      additionalProperties: true
     Product:
       type: object
       title: Product Object
@@ -307,6 +312,13 @@ components:
         createdRFC:
           type: string
           description: Same as created but in format RFC 3339
+    ProductListWrapper:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
     ResponseEnvelope:
       type: object
       description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
@@ -323,16 +335,6 @@ components:
         errorReason:
           type: string
           description: Error message, only present when status is ERROR
-    ProductAttribute:
-      type: object
-      title: ProductAttribute Object
-      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
-      additionalProperties: true
-    ProductCategory:
-      type: object
-      title: ProductCategory Object
-      description: Product category. The reference names this object on Product.categories but does not publish a field table for it.
-      additionalProperties: true
     ProductImage:
       type: object
       title: ProductImage Object
@@ -358,13 +360,18 @@ components:
         createdRFC:
           type: string
           description: Same as created but in format RFC 3339
-    ProductListWrapper:
+    ProductAttribute:
       type: object
-      properties:
-        products:
-          type: array
-          items:
-            $ref: '#/components/schemas/Product'
+      title: ProductAttribute Object
+      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
+      additionalProperties: true
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   parameters:
     business:
       name: business
@@ -374,13 +381,6 @@ components:
       schema:
         type: string
       example: yourdomain.com
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey

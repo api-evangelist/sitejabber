@@ -127,6 +127,42 @@ paths:
               - text
 components:
   schemas:
+    User:
+      type: object
+      title: User Object
+      required:
+      - username
+      - firstName
+      - lastName
+      - thumbnail
+      - profilePage
+      - numReviews
+      - numHelpfulVotes
+      properties:
+        username:
+          type: string
+          description: Username of the user
+        firstName:
+          type: string
+          description: First name of the user
+        lastName:
+          type: string
+          description: First letter of last name of the user
+        thumbnail:
+          type: string
+          description: Relative path of the user's thumbnail image
+        profilePage:
+          type: string
+          description: Url of the user's profile page
+        numReviews:
+          type: integer
+          description: Number of reviews written by the user
+        numHelpfulVotes:
+          type: integer
+          description: Number of helpful votes received
+        email:
+          type: string
+          description: Only available for solicited reviews and when the email of the user was provided by the business
     Comment:
       type: object
       title: Comment Object
@@ -168,13 +204,6 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: Author of the comment
-    CommentListWrapper:
-      type: object
-      properties:
-        comments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Comment'
     ResponseEnvelope:
       type: object
       description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
@@ -191,42 +220,20 @@ components:
         errorReason:
           type: string
           description: Error message, only present when status is ERROR
-    User:
+    CommentListWrapper:
       type: object
-      title: User Object
-      required:
-      - username
-      - firstName
-      - lastName
-      - thumbnail
-      - profilePage
-      - numReviews
-      - numHelpfulVotes
       properties:
-        username:
-          type: string
-          description: Username of the user
-        firstName:
-          type: string
-          description: First name of the user
-        lastName:
-          type: string
-          description: First letter of last name of the user
-        thumbnail:
-          type: string
-          description: Relative path of the user's thumbnail image
-        profilePage:
-          type: string
-          description: Url of the user's profile page
-        numReviews:
-          type: integer
-          description: Number of reviews written by the user
-        numHelpfulVotes:
-          type: integer
-          description: Number of helpful votes received
-        email:
-          type: string
-          description: Only available for solicited reviews and when the email of the user was provided by the business
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   parameters:
     business:
       name: business
@@ -236,13 +243,6 @@ components:
       schema:
         type: string
       example: yourdomain.com
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey

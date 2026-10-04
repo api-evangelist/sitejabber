@@ -74,6 +74,42 @@ paths:
           default: DESC
 components:
   schemas:
+    User:
+      type: object
+      title: User Object
+      required:
+      - username
+      - firstName
+      - lastName
+      - thumbnail
+      - profilePage
+      - numReviews
+      - numHelpfulVotes
+      properties:
+        username:
+          type: string
+          description: Username of the user
+        firstName:
+          type: string
+          description: First name of the user
+        lastName:
+          type: string
+          description: First letter of last name of the user
+        thumbnail:
+          type: string
+          description: Relative path of the user's thumbnail image
+        profilePage:
+          type: string
+          description: Url of the user's profile page
+        numReviews:
+          type: integer
+          description: Number of reviews written by the user
+        numHelpfulVotes:
+          type: integer
+          description: Number of helpful votes received
+        email:
+          type: string
+          description: Only available for solicited reviews and when the email of the user was provided by the business
     ProductQuestionListWrapper:
       type: object
       properties:
@@ -81,6 +117,55 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProductQuestion'
+    ProductCategory:
+      type: object
+      title: ProductCategory Object
+      description: Product category. The reference names this object on Product.categories but does not publish a field table for it.
+      additionalProperties: true
+    ProductQuestion:
+      type: object
+      title: ProductQuestion Object
+      properties:
+        id:
+          type: integer
+          description: Internal question ID
+        content:
+          type: string
+          description: Content of the question
+        created:
+          type: string
+          description: Creation date of the question
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        published:
+          type: string
+          description: Publication date of the question
+        publishedRFC:
+          type: string
+          description: Same as published but in format RFC 3339
+        removed:
+          type: boolean
+          description: Indicates if the question is removed
+        num_answers:
+          type: integer
+          description: Number of answers
+        sum_votes:
+          type: integer
+          description: Number of votes
+        answers:
+          type: array
+          description: Array of product answer objects
+          items:
+            $ref: '#/components/schemas/ProductAnswer'
+        product:
+          allOf:
+          - $ref: '#/components/schemas/Product'
+          description: Product of the question
+        author:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the question
     Product:
       type: object
       title: Product Object
@@ -148,6 +233,52 @@ components:
         createdRFC:
           type: string
           description: Same as created but in format RFC 3339
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
+    ProductImage:
+      type: object
+      title: ProductImage Object
+      properties:
+        caption:
+          type: string
+          description: Caption of the image
+        original:
+          type: string
+          description: Url of the image original size
+        normal:
+          type: string
+          description: Url of the image normal size, max width 600px
+        large:
+          type: string
+          description: Url of the image thumbnail large size 160x160
+        small:
+          type: string
+          description: Url of the image thumbnail small size 96x96
+        created:
+          type: string
+          description: Creation date of the image
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+    ProductAttribute:
+      type: object
+      title: ProductAttribute Object
+      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
+      additionalProperties: true
     ProductAnswer:
       type: object
       title: ProductAnswer Object
@@ -183,137 +314,13 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: Author of the answer
-    ProductQuestion:
-      type: object
-      title: ProductQuestion Object
-      properties:
-        id:
-          type: integer
-          description: Internal question ID
-        content:
-          type: string
-          description: Content of the question
-        created:
-          type: string
-          description: Creation date of the question
-        createdRFC:
-          type: string
-          description: Same as created but in format RFC 3339
-        published:
-          type: string
-          description: Publication date of the question
-        publishedRFC:
-          type: string
-          description: Same as published but in format RFC 3339
-        removed:
-          type: boolean
-          description: Indicates if the question is removed
-        num_answers:
-          type: integer
-          description: Number of answers
-        sum_votes:
-          type: integer
-          description: Number of votes
-        answers:
-          type: array
-          description: Array of product answer objects
-          items:
-            $ref: '#/components/schemas/ProductAnswer'
-        product:
-          allOf:
-          - $ref: '#/components/schemas/Product'
-          description: Product of the question
-        author:
-          allOf:
-          - $ref: '#/components/schemas/User'
-          description: Author of the question
-    ResponseEnvelope:
-      type: object
-      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
-      properties:
-        status:
-          type: string
-          description: OK if everything went good, ERROR if there was an error processing the request
-        success:
-          type: boolean
-          description: true or false
-        errorCode:
-          type: integer
-          description: Error code, only present when status is ERROR
-        errorReason:
-          type: string
-          description: Error message, only present when status is ERROR
-    User:
-      type: object
-      title: User Object
-      required:
-      - username
-      - firstName
-      - lastName
-      - thumbnail
-      - profilePage
-      - numReviews
-      - numHelpfulVotes
-      properties:
-        username:
-          type: string
-          description: Username of the user
-        firstName:
-          type: string
-          description: First name of the user
-        lastName:
-          type: string
-          description: First letter of last name of the user
-        thumbnail:
-          type: string
-          description: Relative path of the user's thumbnail image
-        profilePage:
-          type: string
-          description: Url of the user's profile page
-        numReviews:
-          type: integer
-          description: Number of reviews written by the user
-        numHelpfulVotes:
-          type: integer
-          description: Number of helpful votes received
-        email:
-          type: string
-          description: Only available for solicited reviews and when the email of the user was provided by the business
-    ProductAttribute:
-      type: object
-      title: ProductAttribute Object
-      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
-      additionalProperties: true
-    ProductImage:
-      type: object
-      title: ProductImage Object
-      properties:
-        caption:
-          type: string
-          description: Caption of the image
-        original:
-          type: string
-          description: Url of the image original size
-        normal:
-          type: string
-          description: Url of the image normal size, max width 600px
-        large:
-          type: string
-          description: Url of the image thumbnail large size 160x160
-        small:
-          type: string
-          description: Url of the image thumbnail small size 96x96
-        created:
-          type: string
-          description: Creation date of the image
-        createdRFC:
-          type: string
-          description: Same as created but in format RFC 3339
-    ProductCategory:
-      type: object
-      title: ProductCategory Object
-      description: Product category. The reference names this object on Product.categories but does not publish a field table for it.
-      additionalProperties: true
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   parameters:
     business:
       name: business
@@ -323,13 +330,6 @@ components:
       schema:
         type: string
       example: yourdomain.com
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey
