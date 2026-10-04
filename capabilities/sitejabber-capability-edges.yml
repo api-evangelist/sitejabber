@@ -1,0 +1,75 @@
+slug: sitejabber
+provider: SiteJabber
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 6
+edges:
+- tag: Privacy
+  spec_file: sitejabber-privacy-api-openapi.yml
+  capability_id: BC-130.50
+  capability_id_l1: BC-130
+  capability_name: Privacy & Data Protection Management
+  confidence: 0.8
+  evidence: GET /businesses/{business}/privacy/access accessCustomerInformation; POST /businesses/{business}/privacy/remove
+    removeCustomerInformation
+  reason: Access and erasure of customer personal information are data-subject-rights operations under
+    privacy/data-protection compliance.
+- tag: Reviews
+  spec_file: sitejabber-reviews-api-openapi.yml
+  capability_id: BC-430.50
+  capability_id_l1: BC-430
+  capability_name: Customer Feedback Management
+  confidence: 0.8
+  evidence: GET getBusinessReviews Get reviews of a business; POST publishReview Publish an unpublished
+    review; POST flagReview Flag a review
+  reason: Retrieval, publication and moderation of consumer reviews and ratings of a business is core
+    voice-of-customer / customer feedback management.
+- tag: Product Review Requests
+  spec_file: sitejabber-product-review-requests-api-openapi.yml
+  capability_id: BC-430.50
+  capability_id_l1: BC-430
+  capability_name: Customer Feedback Management
+  confidence: 0.75
+  evidence: POST /businesses/{business}/product/review/request/add  createProductReviewRequest  Create
+    product review request
+  reason: Operations solicit (and withdraw) review requests to customers — a voice-of-customer solicitation
+    mechanic equivalent to survey/feedback request management.
+- tag: Review Requests
+  spec_file: sitejabber-review-requests-api-openapi.yml
+  capability_id: BC-430.50
+  capability_id_l1: BC-430
+  capability_name: Customer Feedback Management
+  confidence: 0.75
+  evidence: POST /businesses/{business}/review/request/add  createReviewRequest  Create review request
+  reason: Creating and removing requests for customers to leave reviews is feedback solicitation, analogous
+    to survey/NPS request management.
+- tag: Resolution Attempts
+  spec_file: sitejabber-resolution-attempts-api-openapi.yml
+  capability_id: BC-430.20
+  capability_id_l1: BC-430
+  capability_name: Complaints & Issue Management
+  confidence: 0.72
+  evidence: POST /businesses/{business}/resolution/send  sendResolutionMessage  Send resolution message
+    to user
+  reason: A business sends a resolution message to a reviewing consumer — complaint/issue resolution outreach.
+    Single operation limits certainty on scope.
+- tag: Product Reviews
+  spec_file: sitejabber-product-reviews-api-openapi.yml
+  capability_id: BC-430.50
+  capability_id_l1: BC-430
+  capability_name: Customer Feedback Management
+  confidence: 0.7
+  evidence: GET getProductReviews Get product reviews; POST addProductReview Add product review; GET getProductReviewsStats
+    Get product reviews stats
+  reason: Collection, publication and statistics of customer-authored product reviews is voice-of-customer
+    / customer feedback management. Some ambiguity with product performance & feedback (BC-820.60), hence
+    0.7.

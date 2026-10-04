@@ -438,6 +438,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/sitejabber-capability-edges.yml
+  name: SiteJabber Business Capability Map
 - type: Overlay
   url: overlays/sitejabber-business-api-overlay.yaml
 - type: X-MCPServerCandidate
