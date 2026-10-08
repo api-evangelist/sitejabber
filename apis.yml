@@ -438,6 +438,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: RateLimits
+  url: rate-limits/sitejabber-rate-limits.yml
 - type: CapabilityMap
   url: capabilities/sitejabber-capability-edges.yml
   name: SiteJabber Business Capability Map
