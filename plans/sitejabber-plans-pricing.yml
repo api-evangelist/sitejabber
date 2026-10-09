@@ -67,3 +67,34 @@ add_ons:
   price: null
   note: Sold as an add-on or standalone. Includes review sourcing, product page widgets, product Q&A, product photos, Google PLA integration.
 plan_count: 4
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  units: []
+  plans:
+  - name: Liftoff
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: Accelerate
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: Ascend
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: Custom
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
