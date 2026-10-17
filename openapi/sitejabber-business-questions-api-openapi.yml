@@ -62,42 +62,6 @@ paths:
           default: DESC
 components:
   schemas:
-    User:
-      type: object
-      title: User Object
-      required:
-      - username
-      - firstName
-      - lastName
-      - thumbnail
-      - profilePage
-      - numReviews
-      - numHelpfulVotes
-      properties:
-        username:
-          type: string
-          description: Username of the user
-        firstName:
-          type: string
-          description: First name of the user
-        lastName:
-          type: string
-          description: First letter of last name of the user
-        thumbnail:
-          type: string
-          description: Relative path of the user's thumbnail image
-        profilePage:
-          type: string
-          description: Url of the user's profile page
-        numReviews:
-          type: integer
-          description: Number of reviews written by the user
-        numHelpfulVotes:
-          type: integer
-          description: Number of helpful votes received
-        email:
-          type: string
-          description: Only available for solicited reviews and when the email of the user was provided by the business
     Question:
       type: object
       title: Question Object
@@ -135,6 +99,13 @@ components:
           allOf:
           - $ref: '#/components/schemas/User'
           description: Author of the question
+    QuestionListWrapper:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
     Answer:
       type: object
       title: Answer Object
@@ -174,20 +145,42 @@ components:
         errorReason:
           type: string
           description: Error message, only present when status is ERROR
-    QuestionListWrapper:
+    User:
       type: object
+      title: User Object
+      required:
+      - username
+      - firstName
+      - lastName
+      - thumbnail
+      - profilePage
+      - numReviews
+      - numHelpfulVotes
       properties:
-        questions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Question'
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
+        username:
+          type: string
+          description: Username of the user
+        firstName:
+          type: string
+          description: First name of the user
+        lastName:
+          type: string
+          description: First letter of last name of the user
+        thumbnail:
+          type: string
+          description: Relative path of the user's thumbnail image
+        profilePage:
+          type: string
+          description: Url of the user's profile page
+        numReviews:
+          type: integer
+          description: Number of reviews written by the user
+        numHelpfulVotes:
+          type: integer
+          description: Number of helpful votes received
+        email:
+          type: string
+          description: Only available for solicited reviews and when the email of the user was provided by the business
   parameters:
     business:
       name: business
@@ -197,6 +190,13 @@ components:
       schema:
         type: string
       example: yourdomain.com
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey

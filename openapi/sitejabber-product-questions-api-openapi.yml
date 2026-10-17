@@ -74,6 +74,74 @@ paths:
           default: DESC
 components:
   schemas:
+    ProductAttribute:
+      type: object
+      title: ProductAttribute Object
+      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
+      additionalProperties: true
+    ProductCategory:
+      type: object
+      title: ProductCategory Object
+      description: Product category. The reference names this object on Product.categories but does not publish a field table for it.
+      additionalProperties: true
+    ProductAnswer:
+      type: object
+      title: ProductAnswer Object
+      properties:
+        id:
+          type: integer
+          description: Internal answer ID
+        content:
+          type: string
+          description: Content of the answer
+        created:
+          type: string
+          description: Creation date of the answer
+        createdRFC:
+          type: string
+          description: Same as created but in format RFC 3339
+        published:
+          type: string
+          description: Publication date of the question
+        publishedRFC:
+          type: string
+          description: Same as published but in format RFC 3339
+        num_votes:
+          type: integer
+          description: Number of votes
+        num_positive_votes:
+          type: integer
+          description: Number of positive votes
+        num_negative_votes:
+          type: integer
+          description: Number of negative votes
+        author:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          description: Author of the answer
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
+    ProductQuestionListWrapper:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductQuestion'
     User:
       type: object
       title: User Object
@@ -110,62 +178,6 @@ components:
         email:
           type: string
           description: Only available for solicited reviews and when the email of the user was provided by the business
-    ProductQuestionListWrapper:
-      type: object
-      properties:
-        questions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProductQuestion'
-    ProductCategory:
-      type: object
-      title: ProductCategory Object
-      description: Product category. The reference names this object on Product.categories but does not publish a field table for it.
-      additionalProperties: true
-    ProductQuestion:
-      type: object
-      title: ProductQuestion Object
-      properties:
-        id:
-          type: integer
-          description: Internal question ID
-        content:
-          type: string
-          description: Content of the question
-        created:
-          type: string
-          description: Creation date of the question
-        createdRFC:
-          type: string
-          description: Same as created but in format RFC 3339
-        published:
-          type: string
-          description: Publication date of the question
-        publishedRFC:
-          type: string
-          description: Same as published but in format RFC 3339
-        removed:
-          type: boolean
-          description: Indicates if the question is removed
-        num_answers:
-          type: integer
-          description: Number of answers
-        sum_votes:
-          type: integer
-          description: Number of votes
-        answers:
-          type: array
-          description: Array of product answer objects
-          items:
-            $ref: '#/components/schemas/ProductAnswer'
-        product:
-          allOf:
-          - $ref: '#/components/schemas/Product'
-          description: Product of the question
-        author:
-          allOf:
-          - $ref: '#/components/schemas/User'
-          description: Author of the question
     Product:
       type: object
       title: Product Object
@@ -233,22 +245,6 @@ components:
         createdRFC:
           type: string
           description: Same as created but in format RFC 3339
-    ResponseEnvelope:
-      type: object
-      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
-      properties:
-        status:
-          type: string
-          description: OK if everything went good, ERROR if there was an error processing the request
-        success:
-          type: boolean
-          description: true or false
-        errorCode:
-          type: integer
-          description: Error code, only present when status is ERROR
-        errorReason:
-          type: string
-          description: Error message, only present when status is ERROR
     ProductImage:
       type: object
       title: ProductImage Object
@@ -274,24 +270,19 @@ components:
         createdRFC:
           type: string
           description: Same as created but in format RFC 3339
-    ProductAttribute:
+    ProductQuestion:
       type: object
-      title: ProductAttribute Object
-      description: Custom product attribute. The reference names this object on Product.attributes / ProductReview.attributes but does not publish a field table for it.
-      additionalProperties: true
-    ProductAnswer:
-      type: object
-      title: ProductAnswer Object
+      title: ProductQuestion Object
       properties:
         id:
           type: integer
-          description: Internal answer ID
+          description: Internal question ID
         content:
           type: string
-          description: Content of the answer
+          description: Content of the question
         created:
           type: string
-          description: Creation date of the answer
+          description: Creation date of the question
         createdRFC:
           type: string
           description: Same as created but in format RFC 3339
@@ -301,26 +292,28 @@ components:
         publishedRFC:
           type: string
           description: Same as published but in format RFC 3339
-        num_votes:
+        removed:
+          type: boolean
+          description: Indicates if the question is removed
+        num_answers:
+          type: integer
+          description: Number of answers
+        sum_votes:
           type: integer
           description: Number of votes
-        num_positive_votes:
-          type: integer
-          description: Number of positive votes
-        num_negative_votes:
-          type: integer
-          description: Number of negative votes
+        answers:
+          type: array
+          description: Array of product answer objects
+          items:
+            $ref: '#/components/schemas/ProductAnswer'
+        product:
+          allOf:
+          - $ref: '#/components/schemas/Product'
+          description: Product of the question
         author:
           allOf:
           - $ref: '#/components/schemas/User'
-          description: Author of the answer
-  responses:
-    TooManyRequests:
-      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ResponseEnvelope'
+          description: Author of the question
   parameters:
     business:
       name: business
@@ -330,6 +323,13 @@ components:
       schema:
         type: string
       example: yourdomain.com
+  responses:
+    TooManyRequests:
+      description: Too many requests. 1000 calls per hour per unique user token; no more than 10 calls in a 10 second window.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResponseEnvelope'
   securitySchemes:
     client_token:
       type: apiKey

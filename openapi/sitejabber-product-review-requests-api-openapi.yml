@@ -119,6 +119,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ResponseEnvelope'
+  parameters:
+    business:
+      name: business
+      in: path
+      required: true
+      description: The business's display address (domain without scheme), e.g. yourdomain.com
+      schema:
+        type: string
+      example: yourdomain.com
   schemas:
     ResponseEnvelope:
       type: object
@@ -136,15 +145,6 @@ components:
         errorReason:
           type: string
           description: Error message, only present when status is ERROR
-  parameters:
-    business:
-      name: business
-      in: path
-      required: true
-      description: The business's display address (domain without scheme), e.g. yourdomain.com
-      schema:
-        type: string
-      example: yourdomain.com
   securitySchemes:
     client_token:
       type: apiKey

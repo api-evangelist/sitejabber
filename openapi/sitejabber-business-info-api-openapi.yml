@@ -72,13 +72,69 @@ paths:
           type: string
 components:
   schemas:
-    UrlListWrapper:
+    UrlObjectWrapper:
       type: object
       properties:
-        urls:
-          type: array
-          items:
-            $ref: '#/components/schemas/Url'
+        url:
+          $ref: '#/components/schemas/Url'
+    ResponseEnvelope:
+      type: object
+      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
+      properties:
+        status:
+          type: string
+          description: OK if everything went good, ERROR if there was an error processing the request
+        success:
+          type: boolean
+          description: true or false
+        errorCode:
+          type: integer
+          description: Error code, only present when status is ERROR
+        errorReason:
+          type: string
+          description: Error message, only present when status is ERROR
+    NumReviews:
+      type: object
+      title: NumReviews Object
+      required:
+      - type
+      - rating
+      properties:
+        type:
+          type: string
+          description: 'Possible values: total, fiveStars, fourStars, threeStars, twoStars, oneStar'
+          enum:
+          - total
+          - fiveStars
+          - fourStars
+          - threeStars
+          - twoStars
+          - oneStar
+        rating:
+          type: integer
+          description: Number of reviews
+    Rating:
+      type: object
+      title: Rating Object
+      required:
+      - type
+      - rating
+      properties:
+        type:
+          type: string
+          description: 'Possible values: overall, service, value, shipping, returns, quality'
+          enum:
+          - overall
+          - service
+          - value
+          - shipping
+          - returns
+          - quality
+        rating:
+          type: number
+          description: Float value between 1 and 5
+          minimum: 1
+          maximum: 5
     Url:
       type: object
       title: Url Object
@@ -148,69 +204,13 @@ components:
         completeAddress:
           type: string
           description: All fields defining the complete address
-    UrlObjectWrapper:
+    UrlListWrapper:
       type: object
       properties:
-        url:
-          $ref: '#/components/schemas/Url'
-    ResponseEnvelope:
-      type: object
-      description: Every response carries a success flag and a status key. When success is false and status is ERROR, errorCode and errorReason are present.
-      properties:
-        status:
-          type: string
-          description: OK if everything went good, ERROR if there was an error processing the request
-        success:
-          type: boolean
-          description: true or false
-        errorCode:
-          type: integer
-          description: Error code, only present when status is ERROR
-        errorReason:
-          type: string
-          description: Error message, only present when status is ERROR
-    Rating:
-      type: object
-      title: Rating Object
-      required:
-      - type
-      - rating
-      properties:
-        type:
-          type: string
-          description: 'Possible values: overall, service, value, shipping, returns, quality'
-          enum:
-          - overall
-          - service
-          - value
-          - shipping
-          - returns
-          - quality
-        rating:
-          type: number
-          description: Float value between 1 and 5
-          minimum: 1
-          maximum: 5
-    NumReviews:
-      type: object
-      title: NumReviews Object
-      required:
-      - type
-      - rating
-      properties:
-        type:
-          type: string
-          description: 'Possible values: total, fiveStars, fourStars, threeStars, twoStars, oneStar'
-          enum:
-          - total
-          - fiveStars
-          - fourStars
-          - threeStars
-          - twoStars
-          - oneStar
-        rating:
-          type: integer
-          description: Number of reviews
+        urls:
+          type: array
+          items:
+            $ref: '#/components/schemas/Url'
   parameters:
     business:
       name: business
