@@ -1,5 +1,5 @@
 generated: '2026-10-12'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/sitejabber/integrations
 - https://n8n.io/integrations/sitejabber/
@@ -10,7 +10,43 @@ checked:
 - https://monid.ai/tools/sitejabber
 - https://n8n.io/integrations/sitejabber/
 - https://zapier.com/apps/sitejabber/integrations
+- zendesk/integrations/zendesk-integration-edges.yml
+- bigcommerce/integrations/bigcommerce-integration-edges.yml
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: Zendesk (own)
+  partner: zendesk
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.zendesk.com/marketplace/apps/support/1222820/smartcustomer-reviews/
+  mirror_of: zendesk/integrations/zendesk-integration-edges.yml
+  apps:
+  - SmartCustomer Reviews
+  listing_count: 1
+  detected: '2026-10-19'
+  detected_by: mirror-platform-listings.py
+  category: AI and Bots
+- partner_name: BigCommerce (own)
+  partner: bigcommerce
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.bigcommerce.com/apps/sitejabber-free-store-reviews-traffic-leads/
+  mirror_of: bigcommerce/integrations/bigcommerce-integration-edges.yml
+  apps:
+  - Sitejabber
+  listing_count: 1
+  detected: '2026-10-20'
+  detected_by: mirror-platform-listings.py
+  category: Merchandising, Ratings & Reviews
 templates: []
